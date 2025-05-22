@@ -1,18 +1,59 @@
-## Getting Started
+# Sistema de Locação de Veículos
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Projeto desenvolvido em Java com interface Swing para gerenciar o ciclo de vida dos veículos (automóveis, motos e vans) de uma empresa de locação.
 
-## Folder Structure
+---
 
-The workspace contains two folders by default, where:
+## Estrutura do Projeto
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+O projeto segue a arquitetura **MVC (Model-View-Controller)** para organizar o código de forma clara e modular.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+### Pacotes principais:
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+- **model/**  
+  Contém as classes do modelo que representam os dados e regras de negócio do sistema, como `Cliente`, `Veiculo` (classe abstrata), `Automovel`, `Motocicleta`, `Van`, `Locacao` e os enums auxiliares (`Marca`, `Estado`, `Categoria`).
 
-## Dependency Management
+- **view/**  
+  Responsável pela interface gráfica usando Java Swing. Contém as telas para cadastro e visualização de clientes, veículos, locações, devoluções e vendas.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+- **controller/**  
+  Contém as classes controladoras que fazem a ponte entre as views e o modelo, processando ações do usuário e atualizando os dados e interfaces.
+
+- **main/**  
+  Contém a classe principal `Main.java` que inicia a aplicação.
+
+---
+
+## Tecnologias utilizadas
+
+- Java SE
+- Java Swing para interface gráfica
+- Programação Orientada a Objetos (POO) com herança, polimorfismo e encapsulamento
+- Arquitetura MVC para organização do código
+
+---
+
+## Como executar
+
+1. Abra o projeto na sua IDE Java preferida (Eclipse, NetBeans, IntelliJ).
+2. Compile o projeto.
+3. Execute a classe `main.Main` para iniciar a aplicação.
+
+---
+
+## Funcionalidades principais
+
+- Cadastro, edição e exclusão de clientes.
+- Cadastro de veículos (automóveis, motos, vans) com herança e interface para métodos específicos.
+- Locação de veículos para clientes com controle de datas e valores.
+- Devolução de veículos locados.
+- Venda de veículos disponíveis.
+
+---
+
+## Contato
+
+Para dúvidas ou sugestões, entre em contato.
+
+---
+
