@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model;
+package table;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import model.Cliente;
 
 /**
  *
@@ -18,16 +19,18 @@ public class ClienteTableModel extends AbstractTableModel {
 
     private String[] colunas = {"id", "nome", "sobrenome", "rg", "cpf", "endereço"};
 
-    ClienteTableModel() {
+    public ClienteTableModel() {
         this.clientes = new ArrayList<>();
     }
 
-    ClienteTableModel(List<Cliente> clientes) {
+    public ClienteTableModel(List<Cliente> clientes) {
         this.clientes = clientes;
     }
 
     public void setClientes(List<Cliente> clientes) {
         this.clientes = clientes;
+        fireTableDataChanged(); 
+
     }
 
     public Cliente getCliente(int rowIndex) {
