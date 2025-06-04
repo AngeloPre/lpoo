@@ -22,7 +22,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public TelaPrincipal(ClienteController clienteController, ClienteTableModel clienteTableModel) {
         this.clienteController = clienteController;
         this.clienteTableModel = clienteTableModel;
-        clienteController.listarClientes();
         initComponents();
      
     }
@@ -42,20 +41,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         clientePanel1 = new view.ClientePanel(this.clienteController, this.clienteTableModel);
+        veiculoPanel1 = new view.VeiculoPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTabbedPane1.addTab("Clientes", clientePanel1);
+        jTabbedPane1.addTab("Incluir Veiculos", veiculoPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 945, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
         );
 
         pack();
@@ -66,5 +67,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private view.ClientePanel clientePanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private view.VeiculoPanel veiculoPanel1;
     // End of variables declaration//GEN-END:variables
 }

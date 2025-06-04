@@ -39,6 +39,7 @@ public class ClientePanel extends javax.swing.JPanel {
         });
         txtId.setEditable(false);
         limparCampos();
+        clienteController.listarClientes();
         
     }
         private void limparCampos() {
