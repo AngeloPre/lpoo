@@ -1,20 +1,21 @@
 package model;
 
 public class Cliente {
-    
+
     private int id;
     private String nome;
     private String sobrenome;
     private String rg;
     private String cpf;
     private String endereco;
+    private Veiculo veiculo;
 
     public Cliente(String nome, String sobreNome, String rg, String cpf, String endereco) {
         this.nome = nome;
         this.sobrenome = sobreNome;
         this.rg = rg;
         this.cpf = cpf;
-        this.endereco = endereco;        
+        this.endereco = endereco;
     }
 
     public Cliente(int id, String nome, String sobreNome, String rg, String cpf, String endereco) {
@@ -23,7 +24,7 @@ public class Cliente {
         this.sobrenome = sobreNome;
         this.rg = rg;
         this.cpf = cpf;
-        this.endereco = endereco;        
+        this.endereco = endereco;
     }
 
     public int getId() {
@@ -74,12 +75,24 @@ public class Cliente {
         this.endereco = endereco;
     }
 
+    public Veiculo getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
         return hash;
     }
 
+    /**
+     * Esse método serve para que se você fizer a comparação entre dois clientes
+     * e ele possuir o mesmo id, será considerado igual
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -94,7 +107,5 @@ public class Cliente {
         final Cliente other = (Cliente) obj;
         return this.id == other.id;
     }
-    
-    
 
 }

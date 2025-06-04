@@ -283,11 +283,16 @@ public class ClientePanel extends javax.swing.JPanel {
             "Tem certeza que deseja excluir o cliente " + txtNome.getText() + "?",
             "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
 
+        try {
+            
         if (confirmacao == JOptionPane.YES_OPTION) {
             int id = Integer.parseInt(txtId.getText());
             clienteController.excluirCliente(id);
             limparCampos();
             JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!");
+        }
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
