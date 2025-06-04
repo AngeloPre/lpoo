@@ -22,6 +22,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public TelaPrincipal(ClienteController clienteController, ClienteTableModel clienteTableModel) {
         this.clienteController = clienteController;
         this.clienteTableModel = clienteTableModel;
+        clienteController.listarClientes();
         initComponents();
      
     }

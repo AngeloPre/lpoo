@@ -3,8 +3,6 @@ package main;
 import controller.ClienteController;
 import javax.swing.SwingUtilities;
 import table.ClienteTableModel;
-import view.ClientePanel;
-import view.ClienteView;
 import view.TelaPrincipal;
 
 public class Main {
@@ -18,7 +16,7 @@ public class Main {
                 tp.setVisible(true);
 
                 // Inicializa a tabela de clientes
-                clienteController.listarClientes();
+                
 
                 // Para outras telas, você faria algo similar:
                 // VeiculoController veiculoController = new VeiculoController();
