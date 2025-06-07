@@ -237,12 +237,15 @@ public class LocacaoPanel extends javax.swing.JPanel {
         scrollCliente.setViewportView(tblCliente);
 
         campoID.setText("jTextField1");
+        campoID.setDisabledTextColor(new java.awt.Color(153, 153, 153));
         campoID.setEnabled(false);
 
         campoCPF.setText("jTextField2");
+        campoCPF.setDisabledTextColor(new java.awt.Color(153, 153, 153));
         campoCPF.setEnabled(false);
 
         campoNomeSobrenome.setText("jTextField3");
+        campoNomeSobrenome.setDisabledTextColor(new java.awt.Color(153, 153, 153));
         campoNomeSobrenome.setEnabled(false);
 
         radioFiltroTipo.setText("Filtrar Veiculos por Tipo");
@@ -263,14 +266,17 @@ public class LocacaoPanel extends javax.swing.JPanel {
         comboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         placaVeiculoSelecionado.setText("jTextField1");
+        placaVeiculoSelecionado.setDisabledTextColor(new java.awt.Color(153, 153, 153));
         placaVeiculoSelecionado.setEnabled(false);
 
         valorDiariaVeiculoSelecionado.setText("jTextField2");
+        valorDiariaVeiculoSelecionado.setDisabledTextColor(new java.awt.Color(153, 153, 153));
         valorDiariaVeiculoSelecionado.setEnabled(false);
 
         campoDiasDeAluguel.setText("jTextField3");
 
         campoCalculoPagamentoLocacao.setText("jTextField4");
+        campoCalculoPagamentoLocacao.setDisabledTextColor(new java.awt.Color(153, 153, 153));
         campoCalculoPagamentoLocacao.setEnabled(false);
 
         botaoLocar.setText("Locar");
@@ -324,7 +330,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
                         .addComponent(campoDiasDeAluguel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(campoCalculoPagamentoLocacao, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(botaoLocar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
