@@ -37,7 +37,7 @@ public class VeiculoTableModel extends AbstractTableModel {
 
     }
 
-    public Veiculo getVeiculos(int rowIndex) {
+    public Veiculo getVeiculo(int rowIndex) {
         return veiculos.get(rowIndex);
     }
 

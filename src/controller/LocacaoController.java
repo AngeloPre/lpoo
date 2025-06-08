@@ -25,8 +25,6 @@ public class LocacaoController {
         this.clienteTableModel = clienteTableModel;
         this.veiculoTableModel = veiculoTableModel;
     }
-
-    
     
     public void locar(String placaSelecionada, String cpfSelecionado,
                int dias, Calendar data){
@@ -48,18 +46,32 @@ public class LocacaoController {
     }
 
     public void buscarPorCpf(String cpf) {
-        Cliente c = clienteDAO.buscarPorCpf(cpf)
-                        .orElseThrow(() -> new RuntimeException("CPF não encontrado"));
+        if (cpf == null || cpf.isBlank()) {
+            listarClientes();
+            return;
+        }
+
+        Cliente c = clienteDAO.buscarPorCpf(cpf.trim())
+                            .orElseThrow(() ->
+                                new RuntimeException("CPF não encontrado"));
+
         clienteTableModel.setClientes(Arrays.asList(c));
     }
 
-
     public void buscarPorNome(String nome) {
-        clienteTableModel.setClientes(clienteDAO.buscarPorNome(nome));
+        if (nome == null || nome.isBlank()) {
+            listarClientes();
+            return;
+        }
+        clienteTableModel.setClientes(clienteDAO.buscarPorNome(nome.trim()));
     }
 
     public void buscarPorSobrenome(String sobrenome) {
-        clienteTableModel.setClientes(clienteDAO.buscarPorSobrenome(sobrenome));
+        if (sobrenome == null || sobrenome.isBlank()) {
+            listarClientes();
+            return;
+        }
+        clienteTableModel.setClientes(clienteDAO.buscarPorSobrenome(sobrenome.trim()));
     }
 
     public String[] obterTiposVeiculo() {

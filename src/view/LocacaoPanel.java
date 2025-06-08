@@ -4,11 +4,19 @@
  */
 package view;
 
+import java.util.regex.Pattern;
+
 import javax.swing.ButtonGroup;
+import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
 
 import controller.LocacaoController;
+import model.Automovel;
+import model.Motocicleta;
+import model.Van;
+import model.Veiculo;
 import table.ClienteTableModel;
 import table.VeiculoTableModel;
 
@@ -20,6 +28,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
     private LocacaoController locacaoController;
     private ClienteTableModel clienteTableModel;
+    private VeiculoTableModel veiculoTableModel;
+    private TableRowSorter<ClienteTableModel> clienteSorter; 
+    private TableRowSorter<VeiculoTableModel> veiculoSorter;
 
     public LocacaoPanel() {
         initComponents();
@@ -28,8 +39,12 @@ public class LocacaoPanel extends javax.swing.JPanel {
     public LocacaoPanel(LocacaoController locacaoController, ClienteTableModel clienteTableModel, VeiculoTableModel veiculoTableModel) {
         this.locacaoController = locacaoController;
         this.clienteTableModel = clienteTableModel;
+        this.veiculoTableModel = veiculoTableModel;
         this.locacaoController.listarClientes();
+        this.locacaoController.listarVeiculos();
         initComponents();
+        configurarSorterCliente();
+        configurarSorterVeiculos();
         configurarRadioButtons();
         popularCombos();
         limparCampos();
@@ -63,49 +78,137 @@ public class LocacaoPanel extends javax.swing.JPanel {
         }
     }
 
-    private void buscarPorCpf() {
-        String cpf = campoBuscaCliente.getText().trim();
-        if (cpf.isBlank()) {
+    private void configurarSorterCliente() {
+        clienteSorter = new TableRowSorter<>(clienteTableModel);
+        tblCliente.setRowSorter(clienteSorter);
+    }
+
+    private void configurarSorterVeiculos() {
+        veiculoSorter = new TableRowSorter<>(veiculoTableModel);
+        tblVeiculo.setRowSorter(veiculoSorter);
+
+        // quando o usuário clicar numa linha, preencher campos
+        tblVeiculo.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tblVeiculo.getSelectedRow() != -1) {
+                preencherCamposVeiculoSelecionado();
+            }
+        });
+    }
+
+    private void aplicarFiltroCliente(int coluna, String texto) {
+        if (texto == null || texto.isBlank()) {
+            clienteSorter.setRowFilter(null);
             return;
         }
 
-        locacaoController.buscarPorCpf(cpf);      // delega ao controller
-        limparCampos();
+        // escapando caracteres especiais para evitar regex inválido
+        String regex = Pattern.quote(texto.trim());
+        clienteSorter.setRowFilter(RowFilter.regexFilter("(?i)" + regex, coluna));
+    }
+
+    private void aplicarFiltrosVeiculo() {
+
+        // 1) cria o filtro
+        RowFilter<VeiculoTableModel, Integer> filtro =
+            new RowFilter<VeiculoTableModel, Integer>() {
+                @Override
+                public boolean include(RowFilter.Entry<? extends VeiculoTableModel,
+                                                    ? extends Integer> e) {
+
+                    VeiculoTableModel model = e.getModel();          // M
+                    int rowIndex            = e.getIdentifier();     // I
+                    Veiculo v               = model.getVeiculo(rowIndex);
+
+                    /* ---------- filtro por TIPO ---------- */
+                    if (checkboxFiltroTipo.isSelected()) {
+                        String tipo = comboTipo.getSelectedItem().toString();
+                        if ("AUTOMOVEL".equals(tipo)   && !(v instanceof Automovel))  return false;
+                        if ("MOTOCICLETA".equals(tipo) && !(v instanceof Motocicleta))return false;
+                        if ("VAN".equals(tipo)         && !(v instanceof Van))        return false;
+                    }
+
+                    /* ---------- filtro por MARCA ---------- */
+                    if (checkboxFiltroMarca.isSelected()) {
+                        String marca = comboMarca.getSelectedItem().toString();
+                        if (!v.getMarca().name().equalsIgnoreCase(marca)) return false;
+                    }
+
+                    /* ---------- filtro por CATEGORIA ---------- */
+                    if (checkboxFiltroCategoria.isSelected()) {
+                        String cat = comboCategoria.getSelectedItem().toString();
+                        if (v instanceof Automovel a) {
+                            if (!a.getCategoria().name().equalsIgnoreCase(cat)) return false;
+                        } else {
+                            return false; // não é automóvel → descarta
+                        }
+                    }
+
+                    return true;   // passou em todos os filtros marcados
+                }
+            };
+
+        // 2) aplica no sorter
+        veiculoSorter.setRowFilter(filtro);
+    }
+
+    private void filtrarPorCpf(String cpf) {
+        aplicarFiltroCliente(4, cpf);
+    }
+
+    private void filtrarPorNome(String nome) {
+        aplicarFiltroCliente(1, nome);
+    }
+
+    private void filtrarPorSobrenome(String sobrenome) {
+        aplicarFiltroCliente(2, sobrenome);
+    }
+
+    private void buscarPorCpf() {
+        filtrarPorCpf(campoBuscaCliente.getText());
+        limparCamposFiltro();
     }
 
     private void buscarPorNome() {
-        String nome = campoBuscaCliente.getText().trim();
-        if (nome.isBlank()) {
-            return;
-        }
-
-        locacaoController.buscarPorNome(nome);
-        limparCampos();
+        filtrarPorNome(campoBuscaCliente.getText());
+        limparCamposFiltro();
     }
 
     private void buscarPorSobrenome() {
-        String sobrenome = campoBuscaCliente.getText().trim();
-        if (sobrenome.isBlank()) {
-            return;
-        }
+        filtrarPorSobrenome(campoBuscaCliente.getText());
+        limparCamposFiltro();
+    }
 
-        locacaoController.buscarPorSobrenome(sobrenome);
-        limparCampos();
+    private void limparCamposFiltro() {
+        campoBuscaCliente.setText("");
     }
 
     private void preencherCamposClienteSelecionado() {
-        int selectedRow = tblCliente.getSelectedRow();
-        if (selectedRow >= 0) {
+        int viewRow = tblCliente.getSelectedRow();          // linha que o usuário clicou
+        if (viewRow == -1) return;
 
-            String id = clienteTableModel.getValueAt(selectedRow, 0).toString(); // id
-            String cpf = clienteTableModel.getValueAt(selectedRow, 4).toString(); // cpf
-            String nome = clienteTableModel.getValueAt(selectedRow, 1).toString(); // nome
-            String sobrenome = clienteTableModel.getValueAt(selectedRow, 2).toString(); // sobrenome
+        int modelRow = tblCliente.convertRowIndexToModel(viewRow); // converte view para model
 
-            campoID.setText(id);
-            campoCPF.setText(cpf);
-            campoNomeSobrenome.setText(nome + " " + sobrenome);
-        }
+        String id        = clienteTableModel.getValueAt(modelRow, 0).toString();
+        String cpf       = clienteTableModel.getValueAt(modelRow, 4).toString();
+        String nome      = clienteTableModel.getValueAt(modelRow, 1).toString();
+        String sobrenome = clienteTableModel.getValueAt(modelRow, 2).toString();
+
+        campoID.setText(id);
+        campoCPF.setText(cpf);
+        campoNomeSobrenome.setText(nome + " " + sobrenome);
+    }
+
+    private void preencherCamposVeiculoSelecionado() {
+        int viewRow = tblVeiculo.getSelectedRow();
+        if (viewRow == -1) return;
+
+        int modelRow = tblVeiculo.convertRowIndexToModel(viewRow);
+
+        String placa = veiculoTableModel.getValueAt(modelRow, 0).toString();
+        String preco = veiculoTableModel.getValueAt(modelRow, 4).toString();
+
+        placaVeiculoSelecionado.setText(placa);
+        valorDiariaVeiculoSelecionado.setText(preco);
     }
 
     private void popularCombos() {
@@ -136,15 +239,12 @@ public class LocacaoPanel extends javax.swing.JPanel {
         clienteFiltro.add(radioBuscaCPF);
         clienteFiltro.add(radioBuscaNome);
         clienteFiltro.add(radioBuscaSobrenome);
-        veiculoFiltro.add(radioFiltroTipo);
-        veiculoFiltro.add(radioFiltroMarca);
-        veiculoFiltro.add(radioFiltroCategoria);
 
         radioBuscaCPF.setActionCommand("CPF");
         radioBuscaNome.setActionCommand("NOME");
         radioBuscaSobrenome.setActionCommand("SOBRENOME");
         radioBuscaCPF.setSelected(true);      // opção padrão
-        radioFiltroTipo.setSelected(true);      // opção padrão
+        checkboxFiltroTipo.setSelected(true);      // opção padrão
     }
 
     private String getCriterioSelecionado() {
@@ -172,7 +272,6 @@ public class LocacaoPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         clienteFiltro = new javax.swing.ButtonGroup();
-        veiculoFiltro = new javax.swing.ButtonGroup();
         nomeDoMenuLocacao = new javax.swing.JLabel();
         btnBuscarCliente = new javax.swing.JButton();
         radioBuscaCPF = new javax.swing.JRadioButton();
@@ -186,11 +285,8 @@ public class LocacaoPanel extends javax.swing.JPanel {
         campoID = new javax.swing.JTextField();
         campoCPF = new javax.swing.JTextField();
         campoNomeSobrenome = new javax.swing.JTextField();
-        radioFiltroTipo = new javax.swing.JRadioButton();
         comboTipo = new javax.swing.JComboBox<>();
-        radioFiltroMarca = new javax.swing.JRadioButton();
         comboMarca = new javax.swing.JComboBox<>();
-        radioFiltroCategoria = new javax.swing.JRadioButton();
         comboCategoria = new javax.swing.JComboBox<>();
         placaVeiculoSelecionado = new javax.swing.JTextField();
         valorDiariaVeiculoSelecionado = new javax.swing.JTextField();
@@ -198,6 +294,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
         campoCalculoPagamentoLocacao = new javax.swing.JTextField();
         botaoLocar = new javax.swing.JButton();
         botaoPesquisarveiculos = new javax.swing.JButton();
+        checkboxFiltroTipo = new javax.swing.JCheckBox();
+        checkboxFiltroMarca = new javax.swing.JCheckBox();
+        checkboxFiltroCategoria = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(453, 403));
 
@@ -251,20 +350,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
         campoNomeSobrenome.setDisabledTextColor(new java.awt.Color(153, 153, 153));
         campoNomeSobrenome.setEnabled(false);
 
-        radioFiltroTipo.setText("Filtrar Veiculos por Tipo");
-        radioFiltroTipo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioFiltroTipoActionPerformed(evt);
-            }
-        });
-
         comboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        radioFiltroMarca.setText("Filtrar Veiculos por Marca");
-
         comboMarca.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        radioFiltroCategoria.setText("Filtrar Veiculos por Categoria");
 
         comboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -291,6 +379,12 @@ public class LocacaoPanel extends javax.swing.JPanel {
             }
         });
 
+        checkboxFiltroTipo.setText("Filtrar Veiculos por Tipo");
+
+        checkboxFiltroMarca.setText("Filtrar Veiculos por Marca");
+
+        checkboxFiltroCategoria.setText("Filtrar Veiculos por Categoria");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -311,29 +405,31 @@ public class LocacaoPanel extends javax.swing.JPanel {
                                 .addComponent(radioBuscaSobrenome))
                             .addComponent(btnBuscarCliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(scrollCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(scrollCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(comboTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(campoID, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
-                            .addComponent(radioFiltroTipo))
+                            .addComponent(checkboxFiltroTipo))
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(comboMarca, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(campoCPF, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
-                            .addComponent(radioFiltroMarca))
+                            .addComponent(checkboxFiltroMarca))
                         .addGap(42, 42, 42)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(campoNomeSobrenome)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(radioFiltroCategoria)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(comboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
-                                        .addComponent(botaoPesquisarveiculos)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(botaoPesquisarveiculos))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(checkboxFiltroCategoria)
+                                        .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(placaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -372,9 +468,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
                         .addComponent(campoCPF, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(radioFiltroTipo)
-                    .addComponent(radioFiltroMarca)
-                    .addComponent(radioFiltroCategoria))
+                    .addComponent(checkboxFiltroTipo)
+                    .addComponent(checkboxFiltroMarca)
+                    .addComponent(checkboxFiltroCategoria))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -383,7 +479,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
                     .addComponent(botaoPesquisarveiculos))
                 .addGap(18, 18, 18)
                 .addComponent(scrollVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(placaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(valorDiariaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -394,12 +490,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void radioFiltroTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioFiltroTipoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioFiltroTipoActionPerformed
-
     private void botaoPesquisarveiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarveiculosActionPerformed
         locacaoController.listarVeiculos();
+        aplicarFiltrosVeiculo();
     }//GEN-LAST:event_botaoPesquisarveiculosActionPerformed
 
 
@@ -413,6 +506,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
     private javax.swing.JTextField campoDiasDeAluguel;
     private javax.swing.JTextField campoID;
     private javax.swing.JTextField campoNomeSobrenome;
+    private javax.swing.JCheckBox checkboxFiltroCategoria;
+    private javax.swing.JCheckBox checkboxFiltroMarca;
+    private javax.swing.JCheckBox checkboxFiltroTipo;
     private javax.swing.ButtonGroup clienteFiltro;
     private javax.swing.JComboBox<String> comboCategoria;
     private javax.swing.JComboBox<String> comboMarca;
@@ -422,14 +518,10 @@ public class LocacaoPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton radioBuscaCPF;
     private javax.swing.JRadioButton radioBuscaNome;
     private javax.swing.JRadioButton radioBuscaSobrenome;
-    private javax.swing.JRadioButton radioFiltroCategoria;
-    private javax.swing.JRadioButton radioFiltroMarca;
-    private javax.swing.JRadioButton radioFiltroTipo;
     private javax.swing.JScrollPane scrollCliente;
     private javax.swing.JScrollPane scrollVeiculo;
     private javax.swing.JTable tblCliente;
     private javax.swing.JTable tblVeiculo;
     private javax.swing.JTextField valorDiariaVeiculoSelecionado;
-    private javax.swing.ButtonGroup veiculoFiltro;
     // End of variables declaration//GEN-END:variables
 }
