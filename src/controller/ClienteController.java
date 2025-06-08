@@ -4,6 +4,7 @@ import dao.ClienteDAO;
 import java.util.List;
 import model.Cliente;
 import table.ClienteTableModel;
+import util.RegraNegocioException;
 
 public class ClienteController {
 
@@ -19,14 +20,21 @@ public class ClienteController {
         clienteTableModel.setClientes(clientes);
     }
 
-    public void salvarCliente(Cliente cliente) {
+    public void salvarCliente(Cliente cliente) throws RegraNegocioException {
         if (cliente.getId() == 0) {
+            String cpf = cliente.getCpf();
 
-            if (cliente.getCpf() == null || cliente.getCpf().trim().isEmpty()) {
-                throw new IllegalArgumentException("CPF é obrigatório");
+            if (cpf == null || cpf.trim().isEmpty()) {
+                throw new RegraNegocioException("CPF é obrigatório");
             }
             if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
-                throw new IllegalArgumentException("Nome é obrigatório");
+                throw new RegraNegocioException("Nome é obrigatório");
+            }
+            if (cpf.length() < 11) {   
+                throw new RegraNegocioException("CPF deve possuir 11 dígitos");
+            }
+            if (!dao.buscarPorCpf(cpf).isEmpty()) {
+                throw new RegraNegocioException("CPF " + cpf + " já foi utilizado.");
             }
             dao.adicionar(cliente);
             listarClientes();

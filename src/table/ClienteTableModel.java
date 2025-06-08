@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import model.Cliente;
+import util.Util;
 
 /**
  *
@@ -29,7 +30,7 @@ public class ClienteTableModel extends AbstractTableModel {
 
     public void setClientes(List<Cliente> clientes) {
         this.clientes = clientes;
-        fireTableDataChanged(); 
+        fireTableDataChanged();
 
     }
 
@@ -55,7 +56,6 @@ public class ClienteTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Cliente cliente = clientes.get(rowIndex);
-
         switch (columnIndex) {
             case 0:
                 return cliente.getId();
@@ -66,12 +66,11 @@ public class ClienteTableModel extends AbstractTableModel {
             case 3:
                 return cliente.getRg();
             case 4:
-                return cliente.getCpf();
+                return Util.formatarCPF(cliente.getCpf());
             case 5:
                 return cliente.getEndereco();
             default:
                 return null;
         }
-
     }
 }

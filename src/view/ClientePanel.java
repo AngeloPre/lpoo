@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import model.Cliente;
 import table.ClienteTableModel;
+import util.RegraNegocioException;
 
 /**
  *
@@ -265,7 +266,7 @@ public class ClientePanel extends javax.swing.JPanel {
             clienteController.salvarCliente(novoCliente); // Delega ao Controller
             limparCampos();
             JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IllegalArgumentException e) {
+        } catch (RegraNegocioException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Validação", JOptionPane.WARNING_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);

@@ -47,7 +47,7 @@ public class Motocicleta extends Veiculo{
         return valor;
     }
 
-    ModeloMotocicleta getModelo(){
+    public ModeloMotocicleta getModelo(){
         return modelo;
     }
 

@@ -2,6 +2,7 @@ package main;
 
 import controller.ClienteController;
 import controller.LocacaoController;
+import controller.VeiculoController;
 import javax.swing.SwingUtilities;
 import table.ClienteTableModel;
 import table.VeiculoTableModel;
@@ -16,7 +17,8 @@ public class Main {
                 VeiculoTableModel veiculoTableModel = new VeiculoTableModel();
                 ClienteController clienteController = new ClienteController(clienteTableModel);
                 LocacaoController locacaoController = new LocacaoController(clienteTableModel, veiculoTableModel);
-                TelaPrincipal tp = new TelaPrincipal(clienteController, clienteTableModel, locacaoController, veiculoTableModel);
+                VeiculoController veiculoController = new VeiculoController(veiculoTableModel);
+                TelaPrincipal tp = new TelaPrincipal(clienteController, clienteTableModel, locacaoController, veiculoTableModel, veiculoController);
                 tp.setVisible(true);
 
                 // Inicializa a tabela de clientes

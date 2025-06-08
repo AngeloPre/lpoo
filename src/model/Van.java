@@ -47,7 +47,7 @@ public class Van extends Veiculo{
         return valor;
     }
 
-    ModeloVan getModelo(){
+    public ModeloVan getModelo(){
         return modelo;
     }
 

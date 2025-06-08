@@ -5,8 +5,12 @@
 package table;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import model.Automovel;
+import model.Motocicleta;
+import model.Van;
 import model.Veiculo;
 
 /**
@@ -17,7 +21,7 @@ public class VeiculoTableModel extends AbstractTableModel {
 
     private List<Veiculo> veiculos;
 
-    private String[] colunas = {"marca", "estado", "categoria", "valor diario", "placa", "ano"};
+    private String[] colunas = {"Placa", "Marca","Modelo", "Ano", "Preço da diária"};
 
     public VeiculoTableModel() {
         this.veiculos = new ArrayList<>();
@@ -55,20 +59,25 @@ public class VeiculoTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Veiculo veiculo = veiculos.get(rowIndex);
+        Formatter f = new Formatter();
 
         switch (columnIndex) {
             case 0:
-                return veiculo.getMarca();
-            case 1:
-                return veiculo.getEstado();
-            case 2:
-                return veiculo.getCategoria();
-            case 3:
-                return veiculo.getValorDiariaLocacao();
-            case 4:
                 return veiculo.getPlaca();
-            case 5:
+            case 1:
+                return veiculo.getMarca();
+            case 2:
+                if (veiculo instanceof Automovel) {
+                    return ((Automovel) veiculo).getModelo();
+                } else if (veiculo instanceof Motocicleta) {
+                    return ((Motocicleta) veiculo).getModelo();
+                } else if (veiculo instanceof Van) {
+                    return ((Van) veiculo).getModelo();
+                }
+            case 3:
                 return veiculo.getAno();
+            case 4:
+                return f.format("R$%,.2f", veiculo.getValorDiariaLocacao());
             default:
                 return null;
         }

@@ -18,10 +18,9 @@ import table.VeiculoTableModel;
  */
 public class LocacaoPanel extends javax.swing.JPanel {
 
-    
     private LocacaoController locacaoController;
     private ClienteTableModel clienteTableModel;
-    
+
     public LocacaoPanel() {
         initComponents();
     }
@@ -36,7 +35,6 @@ public class LocacaoPanel extends javax.swing.JPanel {
         limparCampos();
         this.tblCliente.setModel(clienteTableModel);
         this.tblVeiculo.setModel(veiculoTableModel);
-        locacaoController.listarVeiculos();
         btnBuscarCliente.addActionListener(this::botaoBuscarActionPerformed);
 
         tblCliente.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -65,11 +63,11 @@ public class LocacaoPanel extends javax.swing.JPanel {
         }
     }
 
-    
-
     private void buscarPorCpf() {
         String cpf = campoBuscaCliente.getText().trim();
-        if (cpf.isBlank()) return;
+        if (cpf.isBlank()) {
+            return;
+        }
 
         locacaoController.buscarPorCpf(cpf);      // delega ao controller
         limparCampos();
@@ -77,7 +75,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
     private void buscarPorNome() {
         String nome = campoBuscaCliente.getText().trim();
-        if (nome.isBlank()) return;
+        if (nome.isBlank()) {
+            return;
+        }
 
         locacaoController.buscarPorNome(nome);
         limparCampos();
@@ -85,7 +85,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
     private void buscarPorSobrenome() {
         String sobrenome = campoBuscaCliente.getText().trim();
-        if (sobrenome.isBlank()) return;
+        if (sobrenome.isBlank()) {
+            return;
+        }
 
         locacaoController.buscarPorSobrenome(sobrenome);
         limparCampos();
@@ -95,9 +97,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
         int selectedRow = tblCliente.getSelectedRow();
         if (selectedRow >= 0) {
 
-            String id        = clienteTableModel.getValueAt(selectedRow, 0).toString(); // id
-            String cpf       = clienteTableModel.getValueAt(selectedRow, 4).toString(); // cpf
-            String nome      = clienteTableModel.getValueAt(selectedRow, 1).toString(); // nome
+            String id = clienteTableModel.getValueAt(selectedRow, 0).toString(); // id
+            String cpf = clienteTableModel.getValueAt(selectedRow, 4).toString(); // cpf
+            String nome = clienteTableModel.getValueAt(selectedRow, 1).toString(); // nome
             String sobrenome = clienteTableModel.getValueAt(selectedRow, 2).toString(); // sobrenome
 
             campoID.setText(id);
@@ -107,28 +109,28 @@ public class LocacaoPanel extends javax.swing.JPanel {
     }
 
     private void popularCombos() {
-    /* tipo (automóvel / moto / van)  */
-    comboTipo.setModel(
-        new javax.swing.DefaultComboBoxModel<>(
-            locacaoController.obterTiposVeiculo()
-        )
-    );
+        /* tipo (automóvel / moto / van)  */
+        comboTipo.setModel(
+                new javax.swing.DefaultComboBoxModel<>(
+                        locacaoController.obterTiposVeiculo()
+                )
+        );
 
-    /* marca (VW, GM, Fiat, …)  */
-    comboMarca.setModel(
-        new javax.swing.DefaultComboBoxModel<>(
-            locacaoController.obterMarcas()
-        )
-    );
+        /* marca (VW, GM, Fiat, …)  */
+        comboMarca.setModel(
+                new javax.swing.DefaultComboBoxModel<>(
+                        locacaoController.obterMarcas()
+                )
+        );
 
-    /* categoria (POPULAR, INTERMEDIARIO, LUXO)  */
-    comboCategoria.setModel(
-        new javax.swing.DefaultComboBoxModel<>(
-            locacaoController.obterCategorias()
-        )
-    );
-}
-    
+        /* categoria (POPULAR, INTERMEDIARIO, LUXO)  */
+        comboCategoria.setModel(
+                new javax.swing.DefaultComboBoxModel<>(
+                        locacaoController.obterCategorias()
+                )
+        );
+    }
+
     private void configurarRadioButtons() {
         clienteFiltro = new ButtonGroup();
         clienteFiltro.add(radioBuscaCPF);
@@ -195,6 +197,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
         campoDiasDeAluguel = new javax.swing.JTextField();
         campoCalculoPagamentoLocacao = new javax.swing.JTextField();
         botaoLocar = new javax.swing.JButton();
+        botaoPesquisarveiculos = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(453, 403));
 
@@ -281,6 +284,13 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
         botaoLocar.setText("Locar");
 
+        botaoPesquisarveiculos.setText("Pesquisar Veículos");
+        botaoPesquisarveiculos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoPesquisarveiculosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -320,8 +330,11 @@ public class LocacaoPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(radioFiltroCategoria)
-                                    .addComponent(comboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(comboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                                        .addComponent(botaoPesquisarveiculos)))
+                                .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(placaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -366,7 +379,8 @@ public class LocacaoPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoPesquisarveiculos))
                 .addGap(18, 18, 18)
                 .addComponent(scrollVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, Short.MAX_VALUE)
@@ -384,9 +398,14 @@ public class LocacaoPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_radioFiltroTipoActionPerformed
 
+    private void botaoPesquisarveiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarveiculosActionPerformed
+        locacaoController.listarVeiculos();
+    }//GEN-LAST:event_botaoPesquisarveiculosActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoLocar;
+    private javax.swing.JButton botaoPesquisarveiculos;
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JTextField campoBuscaCliente;
     private javax.swing.JTextField campoCPF;

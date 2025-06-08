@@ -69,9 +69,13 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="radioFiltroCategoria" min="-2" max="-2" attributes="0"/>
-                                  <Component id="comboCategoria" min="-2" pref="200" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="comboCategoria" min="-2" pref="200" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="botaoPesquisarveiculos" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -130,6 +134,7 @@
                   <Component id="comboTipo" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="comboMarca" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="comboCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="botaoPesquisarveiculos" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="scrollVeiculo" min="-2" pref="164" max="-2" attributes="0"/>
@@ -339,6 +344,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Locar"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="botaoPesquisarveiculos">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Pesquisar Ve&#xed;culos"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoPesquisarveiculosActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
