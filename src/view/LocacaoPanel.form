@@ -43,7 +43,7 @@
                           <Component id="btnBuscarCliente" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="scrollCliente" pref="456" max="32767" attributes="0"/>
+                      <Component id="scrollCliente" pref="567" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -87,7 +87,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="campoDiasDeAluguel" min="-2" pref="150" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="campoCalculoPagamentoLocacao" min="-2" pref="150" max="-2" attributes="0"/>
+                      <Component id="campoCalculoPagamentoLocacao" min="-2" pref="250" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="botaoLocar" min="-2" pref="150" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -139,7 +139,7 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="scrollVeiculo" min="-2" pref="164" max="-2" attributes="0"/>
-              <EmptySpace pref="81" max="32767" attributes="0"/>
+              <EmptySpace pref="123" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="placaVeiculoSelecionado" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="valorDiariaVeiculoSelecionado" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>

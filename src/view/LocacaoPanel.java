@@ -19,6 +19,12 @@ import model.Van;
 import model.Veiculo;
 import table.ClienteTableModel;
 import table.VeiculoTableModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 
 /**
  *
@@ -59,6 +65,13 @@ public class LocacaoPanel extends javax.swing.JPanel {
                     preencherCamposClienteSelecionado();
                 }
             }
+        });
+
+        // quando o usuário digitar / apagar no campo de dias
+        campoDiasDeAluguel.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e)  { calculaPagamento(); }
+            @Override public void removeUpdate(DocumentEvent e)  { calculaPagamento(); }
+            @Override public void changedUpdate(DocumentEvent e) { calculaPagamento(); }
         });
     }
 
@@ -209,7 +222,10 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
         placaVeiculoSelecionado.setText(placa);
         valorDiariaVeiculoSelecionado.setText(preco);
+
+        calculaPagamento();   // ← recalcule já com a nova diária
     }
+
 
     private void popularCombos() {
         /* tipo (automóvel / moto / van)  */
@@ -250,6 +266,74 @@ public class LocacaoPanel extends javax.swing.JPanel {
     private String getCriterioSelecionado() {
         return clienteFiltro.getSelection().getActionCommand();
     }
+
+    private void calculaPagamento() {
+
+        /* ---------- 1) dias de aluguel ---------- */
+        String diasTxt = campoDiasDeAluguel.getText().trim();
+        if (diasTxt.isBlank()) {           // campo vazio
+            campoCalculoPagamentoLocacao.setText("0");
+            return;
+        }
+
+        int dias;
+        try {
+            dias = Integer.parseInt(diasTxt);
+            if (dias <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException ex) {
+            campoCalculoPagamentoLocacao.setText("Dias deve ser inteiro > 0");
+            return;
+        }
+
+        /* ---------- 2) valor da diária ---------- */
+        String diariaTxt = valorDiariaVeiculoSelecionado.getText().trim();
+
+        if (diariaTxt.isBlank()) {          // usuário ainda não escolheu veículo
+            campoCalculoPagamentoLocacao.setText("Selecione um veículo");
+            return;
+        }
+
+        double diaria;
+        try {
+            diaria = parseValorMonetario(diariaTxt);
+        } catch (ParseException ex) {
+            campoCalculoPagamentoLocacao.setText("Valor da diária inválido");
+            return;
+        }
+
+
+        /* ---------- 3) cálculo ---------- */
+        double total = dias * diaria;
+
+        // Agora formata em moeda "pt-BR"  →  R$ 900,00
+        NumberFormat nfBR = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        campoCalculoPagamentoLocacao.setText(nfBR.format(total));
+
+    }
+
+    private double parseValorMonetario(String txt) throws ParseException {
+    if (txt == null || txt.isBlank()) throw new ParseException("vazio", 0);
+
+    // tenta parsear como moeda pt-BR
+    NumberFormat nfBR = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+    try {
+        return nfBR.parse(txt).doubleValue();
+    } catch (ParseException ignore) {
+        // remove tudo que não for dígito, vírgula ou ponto e tenta de novo
+        String clean = txt.replaceAll("[^0-9.,]", "");
+        // se tiver duas ocorrências de '.' ou ',' ficamos só com a última
+        int lastComma = clean.lastIndexOf(',');
+        int lastDot   = clean.lastIndexOf('.');
+        int sep = Math.max(lastComma, lastDot);
+        if (sep != -1) {
+            // tira separadores anteriores (milhar)
+            clean = clean.substring(0, sep).replaceAll("[.,]", "") + "." +
+                    clean.substring(sep + 1); // normaliza decimal para ponto
+        }
+        return Double.parseDouble(clean);
+    }
+}
+
 
     private void limparCampos() {
         campoBuscaCliente.setText("");
@@ -405,7 +489,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
                                 .addComponent(radioBuscaSobrenome))
                             .addComponent(btnBuscarCliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(scrollCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE))
+                        .addComponent(scrollCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 567, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -438,7 +522,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(campoDiasDeAluguel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(campoCalculoPagamentoLocacao, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(campoCalculoPagamentoLocacao, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(botaoLocar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
@@ -479,7 +563,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
                     .addComponent(botaoPesquisarveiculos))
                 .addGap(18, 18, 18)
                 .addComponent(scrollVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(placaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(valorDiariaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
