@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import util.RegraNegocioException;
 
 /**
  *
@@ -60,7 +61,7 @@ public class ClienteControllerTest {
     }
 
     @Test
-    public void testClienteDeveSalvar() {
+    public void testClienteDeveSalvar() throws RegraNegocioException {
         ClienteTableModel table = new ClienteTableModel();
         System.out.println(table);
         ClienteController controller = new ClienteController(table);
@@ -72,7 +73,7 @@ public class ClienteControllerTest {
     }
 
     @Test
-    public void testClienteAtualizadoNaoCriaNovoCliente() {
+    public void testClienteAtualizadoNaoCriaNovoCliente() throws RegraNegocioException {
         ClienteTableModel table = new ClienteTableModel();
         System.out.println(table);
         ClienteController controller = new ClienteController(table);
