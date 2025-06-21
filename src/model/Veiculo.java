@@ -6,6 +6,7 @@ import java.util.Calendar;
 import model.enums.Categoria;
 import model.enums.Estado;
 import model.enums.Marca;
+import util.RegraNegocioException;
 
 public abstract class Veiculo implements VeiculoI {
 
@@ -78,19 +79,6 @@ public abstract class Veiculo implements VeiculoI {
 
     @Override
         public void locar(int dias, Calendar data, Cliente cliente) {
-
-            if (cliente == null) {
-                throw new IllegalArgumentException("Cliente não pode ser nulo");
-            }
-            if (dias <= 0) {
-                throw new IllegalArgumentException("Número de dias deve ser maior que zero");
-            }
-            if (estado == Estado.LOCADO) {
-                throw new IllegalStateException("Veículo já está locado");
-            }
-            if (estado == Estado.VENDIDO) {
-                throw new IllegalStateException("Veículo já foi vendido");
-            }
 
             double valorTotal = dias * getValorDiariaLocacao();
 

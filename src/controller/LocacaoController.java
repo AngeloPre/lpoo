@@ -10,9 +10,11 @@ import dao.VeiculoDAO;
 import model.Cliente;
 import model.Veiculo;
 import model.enums.Categoria;
+import model.enums.Estado;
 import model.enums.Marca;
 import table.ClienteTableModel;
 import table.VeiculoTableModel;
+import util.RegraNegocioException;
 
 public class LocacaoController {
     private VeiculoDAO veiculoDAO = new VeiculoDAO();
@@ -27,10 +29,24 @@ public class LocacaoController {
     }
     
     public void locar(String placaSelecionada, String cpfSelecionado,
-               int dias, Calendar data){
+               int dias, Calendar data) throws RegraNegocioException{
         Veiculo v = veiculoDAO.buscarPorPlaca(placaSelecionada);
-        Cliente c = clienteDAO.buscarPorCpf(cpfSelecionado).orElseThrow(() -> new RuntimeException("CPF não encontrado"));
+        Cliente c = clienteDAO.buscarPorCpf(cpfSelecionado).orElseThrow(() -> new RegraNegocioException("CPF não encontrado"));
 
+        
+            if (c == null) {
+                throw new RegraNegocioException("Cliente não pode ser nulo");
+            }
+            if (dias <= 0) {
+                throw new RegraNegocioException("Número de dias deve ser maior que zero");
+            }
+            if (v.getEstado() == Estado.LOCADO) {
+                throw new RegraNegocioException("Veículo já está locado");
+            }
+            if (v.getEstado() == Estado.VENDIDO) {
+                throw new RegraNegocioException("Veículo já foi vendido");
+            }
+        
         v.locar(dias, data, c);
         locacaoDAO.salvar(v.getLocacao());
     }
@@ -45,7 +61,7 @@ public class LocacaoController {
         veiculoTableModel.setVeiculos(veiculos);
     }
 
-    public void buscarPorCpf(String cpf) {
+    public void buscarPorCpf(String cpf) throws RegraNegocioException {
         if (cpf == null || cpf.isBlank()) {
             listarClientes();
             return;
@@ -53,7 +69,7 @@ public class LocacaoController {
 
         Cliente c = clienteDAO.buscarPorCpf(cpf.trim())
                             .orElseThrow(() ->
-                                new RuntimeException("CPF não encontrado"));
+                                new RegraNegocioException("CPF não encontrado"));
 
         clienteTableModel.setClientes(Arrays.asList(c));
     }
