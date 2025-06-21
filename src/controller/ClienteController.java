@@ -1,6 +1,7 @@
 package controller;
 
 import dao.ClienteDAO;
+import dao.VeiculoDAO;
 import java.util.List;
 import model.Cliente;
 import table.ClienteTableModel;
@@ -44,9 +45,13 @@ public class ClienteController {
         }
     }
     
-    public void excluirCliente(int id) {
+    public void excluirCliente(int id)throws RegraNegocioException {
+        VeiculoDAO veiculoDAO = new VeiculoDAO();
+        
+        if (veiculoDAO.clientePossuiVeiculoLocado(id)) {
+            throw new RegraNegocioException("Não é possível excluir cliente com locação ativa.");
+        }
         dao.excluir(id);
         listarClientes();
     }
-
 }

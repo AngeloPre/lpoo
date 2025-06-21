@@ -26,4 +26,9 @@ public class Locacao {
     public Cliente getCliente() {
         return this.cliente;
     }
+    
+    //retorna somente os dias
+    public int getDias() {
+        return this.dias;
+    }
 }

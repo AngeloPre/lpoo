@@ -45,4 +45,17 @@ public class VeiculoDAO {
     public List<Veiculo> listarTodos() {
         return new ArrayList<>(veiculos);
     }
+    
+    public boolean clientePossuiVeiculoLocado(int idCliente) {
+    for (Veiculo veiculo : veiculos) {
+        //verificando o estado do veiculo
+        if (veiculo.getEstado() == Estado.LOCADO) {
+            //verifica se a locacao é do cliente
+            if (veiculo.getLocacao() != null && veiculo.getLocacao().getCliente().getId() == idCliente) {
+                return true; //encontrou veiculo para o cliente
+            }
+        }
+    }
+    return false; 
+}
 }

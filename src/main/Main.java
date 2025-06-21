@@ -1,11 +1,15 @@
 package main;
 
 import controller.ClienteController;
+import controller.DevolucaoController;
 import controller.LocacaoController;
 import controller.VeiculoController;
+import controller.VendaVeiculoController;
 import javax.swing.SwingUtilities;
 import table.ClienteTableModel;
+import table.DevolucaoTableModel;
 import table.VeiculoTableModel;
+import table.VendaVeiculoTableModel;
 import view.TelaPrincipal;
 
 public class Main {
@@ -13,12 +17,31 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 // Instanciação e conexão dos componentes para a tela de Clientes
+                
+                //Table Model
                 ClienteTableModel clienteTableModel = new ClienteTableModel();
                 VeiculoTableModel veiculoTableModel = new VeiculoTableModel();
+                DevolucaoTableModel devolucaoTableModel = new DevolucaoTableModel();
+                VendaVeiculoTableModel vendaVeiculoTableModel = new VendaVeiculoTableModel();              
+                //Controllers
                 ClienteController clienteController = new ClienteController(clienteTableModel);
                 LocacaoController locacaoController = new LocacaoController(clienteTableModel, veiculoTableModel);
                 VeiculoController veiculoController = new VeiculoController(veiculoTableModel);
-                TelaPrincipal tp = new TelaPrincipal(clienteController, clienteTableModel, locacaoController, veiculoTableModel, veiculoController);
+                DevolucaoController devolucaoController = new DevolucaoController();
+                
+                VendaVeiculoController vendaVeiculoController = new VendaVeiculoController(vendaVeiculoTableModel);
+                
+                TelaPrincipal tp = new TelaPrincipal(
+                        clienteController, 
+                        clienteTableModel,
+                        locacaoController,
+                        veiculoTableModel,
+                        veiculoController,
+                        devolucaoController,
+                        devolucaoTableModel,
+                        vendaVeiculoController,
+                        vendaVeiculoTableModel
+                );
                 tp.setVisible(true);
 
                 // Inicializa a tabela de clientes

@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import table.ClienteTableModel;
 import model.Cliente;
+import util.RegraNegocioException;
 
 public class ClienteView extends javax.swing.JFrame {
 
@@ -268,7 +269,11 @@ public class ClienteView extends javax.swing.JFrame {
 
         if (confirmacao == JOptionPane.YES_OPTION) {
             int id = Integer.parseInt(txtId.getText());
-            clienteController.excluirCliente(id);
+            try {
+                clienteController.excluirCliente(id);
+            } catch (RegraNegocioException ex) {
+                System.getLogger(ClienteView.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
             limparCampos();
             JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!");
         }

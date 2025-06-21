@@ -275,20 +275,27 @@ public class ClientePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        if (txtId.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Selecione um cliente para excluir.", "Erro", JOptionPane.ERROR_MESSAGE);
+        int selectedRow = tblClientes.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente para excluir.");
             return;
         }
-
-        int confirmacao = JOptionPane.showConfirmDialog(this,
-            "Tem certeza que deseja excluir o cliente " + txtNome.getText() + "?",
-            "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
-
-        if (confirmacao == JOptionPane.YES_OPTION) {
-            int id = Integer.parseInt(txtId.getText());
+        
+        int id = (int) clienteTableModel.getCliente(selectedRow).getId();
+        String nome = clienteTableModel.getCliente(selectedRow).getNome();
+        
+        int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o cliente " + nome + "?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
+      
+        if (confirm == JOptionPane.YES_OPTION) {
+        try {
             clienteController.excluirCliente(id);
             limparCampos();
             JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!");
+        } catch (RegraNegocioException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Negócio", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
 

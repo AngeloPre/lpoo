@@ -17,7 +17,7 @@ import table.VeiculoTableModel;
 public class LocacaoController {
     private VeiculoDAO veiculoDAO = new VeiculoDAO();
     private ClienteDAO clienteDAO = new ClienteDAO();
-    private LocacaoDAO locacaoDAO;
+    private LocacaoDAO locacaoDAO = new LocacaoDAO();
     private ClienteTableModel clienteTableModel;
     private VeiculoTableModel veiculoTableModel;
 

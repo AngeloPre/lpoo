@@ -13,6 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
 import controller.LocacaoController;
+import java.awt.HeadlessException;
 import model.Automovel;
 import model.Motocicleta;
 import model.Van;
@@ -23,7 +24,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Locale;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -381,6 +384,10 @@ public class LocacaoPanel extends javax.swing.JPanel {
         checkboxFiltroTipo = new javax.swing.JCheckBox();
         checkboxFiltroMarca = new javax.swing.JCheckBox();
         checkboxFiltroCategoria = new javax.swing.JCheckBox();
+        label1 = new java.awt.Label();
+        label2 = new java.awt.Label();
+        label3 = new java.awt.Label();
+        label4 = new java.awt.Label();
 
         setPreferredSize(new java.awt.Dimension(453, 403));
 
@@ -455,6 +462,11 @@ public class LocacaoPanel extends javax.swing.JPanel {
         campoCalculoPagamentoLocacao.setEnabled(false);
 
         botaoLocar.setText("Locar");
+        botaoLocar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoLocarActionPerformed(evt);
+            }
+        });
 
         botaoPesquisarveiculos.setText("Pesquisar Veículos");
         botaoPesquisarveiculos.addActionListener(new java.awt.event.ActionListener() {
@@ -469,6 +481,14 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
         checkboxFiltroCategoria.setText("Filtrar Veiculos por Categoria");
 
+        label1.setText("Placa");
+
+        label2.setText("Valor Diária");
+
+        label3.setText("Dias de aluguel");
+
+        label4.setText("Total da locação");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -476,7 +496,9 @@ public class LocacaoPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollVeiculo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(scrollVeiculo)
+                        .addGap(160, 160, 160))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(campoBuscaCliente, javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,7 +511,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
                                 .addComponent(radioBuscaSobrenome))
                             .addComponent(btnBuscarCliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(scrollCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 567, Short.MAX_VALUE))
+                        .addComponent(scrollCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -516,13 +538,21 @@ public class LocacaoPanel extends javax.swing.JPanel {
                                         .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(placaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(label1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(placaVeiculoSelecionado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(valorDiariaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(valorDiariaVeiculoSelecionado, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                            .addComponent(label2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(campoDiasDeAluguel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(label3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(campoDiasDeAluguel, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(campoCalculoPagamentoLocacao, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(campoCalculoPagamentoLocacao, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                            .addComponent(label4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(botaoLocar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
@@ -563,7 +593,13 @@ public class LocacaoPanel extends javax.swing.JPanel {
                     .addComponent(botaoPesquisarveiculos))
                 .addGap(18, 18, 18)
                 .addComponent(scrollVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(placaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(valorDiariaVeiculoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -572,12 +608,61 @@ public class LocacaoPanel extends javax.swing.JPanel {
                     .addComponent(botaoLocar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
+
+        label1.getAccessibleContext().setAccessibleDescription("");
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoPesquisarveiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarveiculosActionPerformed
         locacaoController.listarVeiculos();
         aplicarFiltrosVeiculo();
     }//GEN-LAST:event_botaoPesquisarveiculosActionPerformed
+
+    private void botaoLocarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLocarActionPerformed
+        // validando se um cliente foi selecionado
+        if (campoID.getText().isBlank()) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+        return;
+        }
+        // validando se um veículo foi selecionado na tabela
+        int selectedRow = tblVeiculo.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione um veículo para locar.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+        return;
+        }
+
+        //validando o número de dias
+        int dias;
+        try {
+            dias = Integer.parseInt(campoDiasDeAluguel.getText());
+            if (dias <= 0) {
+                JOptionPane.showMessageDialog(this, "O número de dias deve ser maior que zero.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+            return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira um número válido de dias.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // tentando obter dados para a locação
+            int modelRow = tblVeiculo.convertRowIndexToModel(selectedRow);
+            Veiculo veiculoSelecionado = veiculoTableModel.getVeiculo(modelRow);
+            String cpfCliente = campoCPF.getText(); // O CPF já está no campo de texto
+
+            // chamando o controller para efetuar a locação
+            locacaoController.locar(veiculoSelecionado.getPlaca(), cpfCliente, dias, Calendar.getInstance());
+
+            JOptionPane.showMessageDialog(this, "Veículo locado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+            //atualizando a lista de veículos e limpando os campos
+            locacaoController.listarVeiculos(); // atualiza a tabela de veículos
+            aplicarFiltrosVeiculo(); // reaplica os filtros para remover o veículo locado da lista
+            limparCampos();
+
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao locar veículo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }        
+    }//GEN-LAST:event_botaoLocarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -597,6 +682,10 @@ public class LocacaoPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> comboCategoria;
     private javax.swing.JComboBox<String> comboMarca;
     private javax.swing.JComboBox<String> comboTipo;
+    private java.awt.Label label1;
+    private java.awt.Label label2;
+    private java.awt.Label label3;
+    private java.awt.Label label4;
     private javax.swing.JLabel nomeDoMenuLocacao;
     private javax.swing.JTextField placaVeiculoSelecionado;
     private javax.swing.JRadioButton radioBuscaCPF;
