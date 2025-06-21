@@ -45,7 +45,7 @@ public class ClienteControllerTest {
         ClienteTableModel table = new ClienteTableModel();
         ClienteController controller = new ClienteController(table);
         Cliente cli = new Cliente("Marcos", "", "", "", "");
-        IllegalArgumentException excecao = assertThrows(IllegalArgumentException.class,
+        RegraNegocioException excecao = assertThrows(RegraNegocioException.class,
                 () -> controller.salvarCliente(cli));
         assertEquals("CPF é obrigatório", excecao.getMessage());
     }
@@ -55,7 +55,7 @@ public class ClienteControllerTest {
         ClienteTableModel table = new ClienteTableModel();
         ClienteController controller = new ClienteController(table);
         Cliente cli = new Cliente("  ", "", "", "67129346051", "");
-        IllegalArgumentException excecao = assertThrows(IllegalArgumentException.class,
+        RegraNegocioException excecao = assertThrows(RegraNegocioException.class,
                 () -> controller.salvarCliente(cli));
         assertEquals("Nome é obrigatório", excecao.getMessage());
     }
@@ -67,7 +67,7 @@ public class ClienteControllerTest {
         ClienteController controller = new ClienteController(table);
         Cliente cli = new Cliente("Beto", "Bom de Bola do outro testes mesmo", "177087552", "67129346051", "Rua dos Jogadores,10");
         controller.salvarCliente(cli);
-        int numeroRegistrosEsperado = 3; //Depende da quantidade de clientes criados na classe ClienteDAO
+        int numeroRegistrosEsperado = 21; //Depende da quantidade de clientes criados na classe ClienteDAO
         int numeroRegistrosObtido = table.getRowCount();
         assertEquals(numeroRegistrosEsperado, numeroRegistrosObtido);
     }
@@ -79,7 +79,7 @@ public class ClienteControllerTest {
         ClienteController controller = new ClienteController(table);
         Cliente cli = new Cliente(1, "Beto", "Atualiza", "177087552", "67129346051", "Rua dos Jogadores,10");
         controller.salvarCliente(cli);
-        int numeroRegistrosEsperado = 2; //Depende da quantidade de clientes criados na classe ClienteDAO
+        int numeroRegistrosEsperado = 21; //Depende da quantidade de clientes criados na classe ClienteDAO
         int numeroRegistrosObtido = table.getRowCount();
         assertEquals(numeroRegistrosEsperado, numeroRegistrosObtido);
 

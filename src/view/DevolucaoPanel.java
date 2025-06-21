@@ -22,7 +22,12 @@ public class DevolucaoPanel extends javax.swing.JPanel {
      * Creates new form DevolucaoPanel
      */
    
+     
     
+    public DevolucaoPanel() {
+        initComponents();
+    }
+
     public DevolucaoPanel(DevolucaoController controller, DevolucaoTableModel tableModel) {
         this.devolucaoController = controller;
         this.tableModel = tableModel; // Recebe o modelo
@@ -31,9 +36,7 @@ public class DevolucaoPanel extends javax.swing.JPanel {
         tabelaVeiculos.setModel(this.tableModel); // Define o modelo na tabela
         
         carregarDados(); // Carrega os dados iniciais
-        
-        btnDevolver.addActionListener(this::btnDevolverActionPerformed);
-        btnAtualizar.addActionListener(this::btnAtualizarActionPerformed);
+
     }
 
     private void carregarDados() {
@@ -138,6 +141,9 @@ public class DevolucaoPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnDevolverActionPerformed
 
+    public void carregarDadosPublic() {
+        carregarDados();
+    }
     private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
         // TODO add your handling code here:
         carregarDados();

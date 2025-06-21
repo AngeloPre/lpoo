@@ -60,7 +60,7 @@ public class LocacaoController {
     }
 
     public void listarVeiculos() {
-        List<Veiculo> veiculos = veiculoDAO.listarTodos();
+        List<Veiculo> veiculos = veiculoDAO.listarVeiculosNaoLocados();
         veiculoTableModel.setVeiculos(veiculos);
     }
 

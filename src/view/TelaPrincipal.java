@@ -71,6 +71,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
         jTabbedPane1.addTab("Clientes", clientePanel1);
         jTabbedPane1.addTab("Incluir Veiculos", veiculoPanel1);
         jTabbedPane1.addTab("Locação de Veículos", locacaoPanel1);
@@ -87,11 +92,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 575, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        
+        int index = jTabbedPane1.getSelectedIndex();        
+        switch (index) {
+            case 4:
+                this.devolucaoPanel1.carregarDadosPublic();
+                break;
+            case 2:
+                this.locacaoPanel1.pesquisar();
+                break;
+            default:
+        }
+    }//GEN-LAST:event_jTabbedPane1StateChanged
 
 
 
