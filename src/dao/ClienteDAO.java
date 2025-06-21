@@ -113,4 +113,6 @@ public class ClienteDAO {
         int indiceCliente = buscarPorId(id);
         clientes.remove(indiceCliente);
     }
+    
+    
 }
