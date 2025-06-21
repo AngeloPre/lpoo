@@ -32,7 +32,10 @@ public class LocacaoController {
                int dias, Calendar data) throws RegraNegocioException{
         Veiculo v = veiculoDAO.buscarPorPlaca(placaSelecionada);
         Cliente c = clienteDAO.buscarPorCpf(cpfSelecionado).orElseThrow(() -> new RegraNegocioException("CPF não encontrado"));
-
+            
+            if (veiculoDAO.clientePossuiVeiculoLocado(c.getId())){
+                throw new RegraNegocioException("Este cliente já possui um veículo locado");   
+            }
         
             if (c == null) {
                 throw new RegraNegocioException("Cliente não pode ser nulo");

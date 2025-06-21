@@ -33,6 +33,7 @@ public class DevolucaoPanel extends javax.swing.JPanel {
         carregarDados(); // Carrega os dados iniciais
         
         btnDevolver.addActionListener(this::btnDevolverActionPerformed);
+        btnAtualizar.addActionListener(this::btnAtualizarActionPerformed);
     }
 
     private void carregarDados() {
@@ -53,8 +54,9 @@ public class DevolucaoPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaVeiculos = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        btnAtualizar = new javax.swing.JButton();
 
-        btnDevolver.setText("jButton1");
+        btnDevolver.setText("Devolver");
         btnDevolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDevolverActionPerformed(evt);
@@ -76,6 +78,13 @@ public class DevolucaoPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Devolução de Veículos");
 
+        btnAtualizar.setText("Atualizar Lista");
+        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,13 +92,15 @@ public class DevolucaoPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnDevolver))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 879, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnDevolver)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAtualizar)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -100,7 +111,9 @@ public class DevolucaoPanel extends javax.swing.JPanel {
                 .addGap(9, 9, 9)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDevolver)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDevolver)
+                    .addComponent(btnAtualizar))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -125,8 +138,14 @@ public class DevolucaoPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnDevolverActionPerformed
 
+    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
+        // TODO add your handling code here:
+        carregarDados();
+    }//GEN-LAST:event_btnAtualizarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAtualizar;
     private javax.swing.JButton btnDevolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

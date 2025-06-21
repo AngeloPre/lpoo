@@ -135,7 +135,8 @@ public class LocacaoPanel extends javax.swing.JPanel {
                     VeiculoTableModel model = e.getModel();          // M
                     int rowIndex            = e.getIdentifier();     // I
                     Veiculo v               = model.getVeiculo(rowIndex);
-
+                        
+                    
                     /* ---------- filtro por TIPO ---------- */
                     if (checkboxFiltroTipo.isSelected()) {
                         String tipo = comboTipo.getSelectedItem().toString();

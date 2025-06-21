@@ -91,9 +91,5 @@ public abstract class Veiculo implements VeiculoI {
     public void vender() {
         estado = Estado.VENDIDO;
     }
-
-    public Object replace(String string, String string0) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
     
 }
