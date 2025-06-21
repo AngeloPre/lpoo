@@ -231,9 +231,9 @@ public class ClientePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
-        int selectedRow = tblClientes.getSelectedRow();
-        if (selectedRow >= 0) {
-            Cliente cliente = clienteTableModel.getCliente(selectedRow);
+        int linhaSelecionada = tblClientes.getSelectedRow();
+        if (linhaSelecionada >= 0) {
+            Cliente cliente = clienteTableModel.getCliente(linhaSelecionada);
             if (cliente != null) { // Garante que um cliente foi retornado
                 txtId.setText(String.valueOf(cliente.getId()));
                 txtNome.setText(cliente.getNome());
@@ -275,14 +275,14 @@ public class ClientePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int selectedRow = tblClientes.getSelectedRow();
-        if (selectedRow == -1) {
+        int linhaSelecionada = tblClientes.getSelectedRow();
+        if (linhaSelecionada == -1) {
             JOptionPane.showMessageDialog(this, "Selecione um cliente para excluir.");
             return;
         }
         
-        int id = (int) clienteTableModel.getCliente(selectedRow).getId();
-        String nome = clienteTableModel.getCliente(selectedRow).getNome();
+        int id = (int) clienteTableModel.getCliente(linhaSelecionada).getId();
+        String nome = clienteTableModel.getCliente(linhaSelecionada).getNome();
         
         int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o cliente " + nome + "?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
       
