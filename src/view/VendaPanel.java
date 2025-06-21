@@ -15,8 +15,14 @@ import table.VendaVeiculoTableModel;
  */
 public class VendaPanel extends javax.swing.JPanel {
 
-    private final VendaVeiculoController vendaVeiculoController;
-    private final VendaVeiculoTableModel vendaVeiculoTableModel;
+    private VendaVeiculoController vendaVeiculoController = null;
+    private VendaVeiculoTableModel vendaVeiculoTableModel = null;
+
+    public VendaPanel() {
+        initComponents();
+    }
+    
+    
 
     /**
      * Creates new form VendaPanel

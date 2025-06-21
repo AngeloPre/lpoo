@@ -614,6 +614,11 @@ public class LocacaoPanel extends javax.swing.JPanel {
         label1.getAccessibleContext().setAccessibleDescription("");
     }// </editor-fold>//GEN-END:initComponents
 
+    public void pesquisar() {                                                       
+        locacaoController.listarVeiculos();
+        aplicarFiltrosVeiculo();        
+    }
+    
     private void botaoPesquisarveiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarveiculosActionPerformed
         locacaoController.listarVeiculos();
         aplicarFiltrosVeiculo();
