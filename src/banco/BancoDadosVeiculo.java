@@ -26,41 +26,6 @@ public class BancoDadosVeiculo {
         veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.POPULAR, 48000, "BRA-2E19", 2023, ModeloAutomovel.Palio));
         veiculos.add(new Motocicleta(Marca.Honda, Estado.DISPONIVEL, null, Categoria.POPULAR, 15000, "JAH-8B17", 2024, ModeloMotocicleta.CG_125));
         veiculos.add(new Van(Marca.VW, Estado.DISPONIVEL, null, Categoria.INTERMEDIARIO, 150000, "VAN-4G58", 2021, ModeloVan.Kombi));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.INTERMEDIARIO, 1500, "RSC-6885", 1995, ModeloAutomovel.Palio));
-        veiculos.add(new Automovel(Marca.GM, Estado.NOVO, null, Categoria.POPULAR, 1500, "CAP-6775", 2005, ModeloAutomovel.Celta));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.POPULAR, 48000, "BRA-2E19", 2023, ModeloAutomovel.Palio));
-        veiculos.add(new Motocicleta(Marca.Honda, Estado.DISPONIVEL, null, Categoria.POPULAR, 15000, "JAH-8B17", 2024, ModeloMotocicleta.CG_125));
-        veiculos.add(new Van(Marca.VW, Estado.DISPONIVEL, null, Categoria.INTERMEDIARIO, 150000, "VAN-4G58", 2021, ModeloVan.Kombi));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.INTERMEDIARIO, 1500, "RSC-6885", 1995, ModeloAutomovel.Palio));
-        veiculos.add(new Automovel(Marca.GM, Estado.NOVO, null, Categoria.POPULAR, 1500, "CAP-6775", 2005, ModeloAutomovel.Celta));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.POPULAR, 48000, "BRA-2E19", 2023, ModeloAutomovel.Palio));
-        veiculos.add(new Motocicleta(Marca.Honda, Estado.DISPONIVEL, null, Categoria.POPULAR, 15000, "JAH-8B17", 2024, ModeloMotocicleta.CG_125));
-        veiculos.add(new Van(Marca.VW, Estado.DISPONIVEL, null, Categoria.INTERMEDIARIO, 150000, "VAN-4G58", 2021, ModeloVan.Kombi));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.INTERMEDIARIO, 1500, "RSC-6885", 1995, ModeloAutomovel.Palio));
-        veiculos.add(new Automovel(Marca.GM, Estado.NOVO, null, Categoria.POPULAR, 1500, "CAP-6775", 2005, ModeloAutomovel.Celta));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.POPULAR, 48000, "BRA-2E19", 2023, ModeloAutomovel.Palio));
-        veiculos.add(new Motocicleta(Marca.Honda, Estado.DISPONIVEL, null, Categoria.POPULAR, 15000, "JAH-8B17", 2024, ModeloMotocicleta.CG_125));
-        veiculos.add(new Van(Marca.VW, Estado.DISPONIVEL, null, Categoria.INTERMEDIARIO, 150000, "VAN-4G58", 2021, ModeloVan.Kombi));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.INTERMEDIARIO, 1500, "RSC-6885", 1995, ModeloAutomovel.Palio));
-        veiculos.add(new Automovel(Marca.GM, Estado.NOVO, null, Categoria.POPULAR, 1500, "CAP-6775", 2005, ModeloAutomovel.Celta));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.POPULAR, 48000, "BRA-2E19", 2023, ModeloAutomovel.Palio));
-        veiculos.add(new Motocicleta(Marca.Honda, Estado.DISPONIVEL, null, Categoria.POPULAR, 15000, "JAH-8B17", 2024, ModeloMotocicleta.CG_125));
-        veiculos.add(new Van(Marca.VW, Estado.DISPONIVEL, null, Categoria.INTERMEDIARIO, 150000, "VAN-4G58", 2021, ModeloVan.Kombi));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.INTERMEDIARIO, 1500, "RSC-6885", 1995, ModeloAutomovel.Palio));
-        veiculos.add(new Automovel(Marca.GM, Estado.NOVO, null, Categoria.POPULAR, 1500, "CAP-6775", 2005, ModeloAutomovel.Celta));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.POPULAR, 48000, "BRA-2E19", 2023, ModeloAutomovel.Palio));
-        veiculos.add(new Motocicleta(Marca.Honda, Estado.DISPONIVEL, null, Categoria.POPULAR, 15000, "JAH-8B17", 2024, ModeloMotocicleta.CG_125));
-        veiculos.add(new Van(Marca.VW, Estado.DISPONIVEL, null, Categoria.INTERMEDIARIO, 150000, "VAN-4G58", 2021, ModeloVan.Kombi));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.INTERMEDIARIO, 1500, "RSC-6885", 1995, ModeloAutomovel.Palio));
-        veiculos.add(new Automovel(Marca.GM, Estado.NOVO, null, Categoria.POPULAR, 1500, "CAP-6775", 2005, ModeloAutomovel.Celta));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.POPULAR, 48000, "BRA-2E19", 2023, ModeloAutomovel.Palio));
-        veiculos.add(new Motocicleta(Marca.Honda, Estado.DISPONIVEL, null, Categoria.POPULAR, 15000, "JAH-8B17", 2024, ModeloMotocicleta.CG_125));
-        veiculos.add(new Van(Marca.VW, Estado.DISPONIVEL, null, Categoria.INTERMEDIARIO, 150000, "VAN-4G58", 2021, ModeloVan.Kombi));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.INTERMEDIARIO, 1500, "RSC-6885", 1995, ModeloAutomovel.Palio));
-        veiculos.add(new Automovel(Marca.GM, Estado.NOVO, null, Categoria.POPULAR, 1500, "CAP-6775", 2005, ModeloAutomovel.Celta));
-        veiculos.add(new Automovel(Marca.Fiat, Estado.NOVO, null, Categoria.POPULAR, 48000, "BRA-2E19", 2023, ModeloAutomovel.Palio));
-        veiculos.add(new Motocicleta(Marca.Honda, Estado.DISPONIVEL, null, Categoria.POPULAR, 15000, "JAH-8B17", 2024, ModeloMotocicleta.CG_125));
-        veiculos.add(new Van(Marca.VW, Estado.DISPONIVEL, null, Categoria.INTERMEDIARIO, 150000, "VAN-4G58", 2021, ModeloVan.Kombi));
     }
     
     public void adicionarVeiculo(Veiculo veiculo) {
