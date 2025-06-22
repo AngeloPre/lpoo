@@ -4,6 +4,7 @@
  */
 package view;
 
+import service.VeiculoService;
 import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
@@ -14,9 +15,6 @@ import javax.swing.table.TableRowSorter;
 
 import controller.LocacaoController;
 import java.awt.HeadlessException;
-import model.Automovel;
-import model.Motocicleta;
-import model.Van;
 import model.Veiculo;
 import table.ClienteTableModel;
 import table.VeiculoTableModel;
@@ -27,6 +25,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
 import javax.swing.JOptionPane;
+import static service.VeiculoService.*;
 import util.RegraNegocioException;
 
 
@@ -123,52 +122,6 @@ public class LocacaoPanel extends javax.swing.JPanel {
         clienteSorter.setRowFilter(RowFilter.regexFilter("(?i)" + regex, coluna));
     }
 
-    private void aplicarFiltrosVeiculo() {
-
-        // 1) cria o filtro
-        RowFilter<VeiculoTableModel, Integer> filtro =
-            new RowFilter<VeiculoTableModel, Integer>() {
-                @Override
-                public boolean include(RowFilter.Entry<? extends VeiculoTableModel,
-                                                    ? extends Integer> e) {
-
-                    VeiculoTableModel model = e.getModel();          // M
-                    int rowIndex            = e.getIdentifier();     // I
-                    Veiculo v               = model.getVeiculo(rowIndex);
-                        
-                    
-                    /* ---------- filtro por TIPO ---------- */
-                    if (checkboxFiltroTipo.isSelected()) {
-                        String tipo = comboTipo.getSelectedItem().toString();
-                        if ("AUTOMOVEL".equals(tipo)   && !(v instanceof Automovel))  return false;
-                        if ("MOTOCICLETA".equals(tipo) && !(v instanceof Motocicleta))return false;
-                        if ("VAN".equals(tipo)         && !(v instanceof Van))        return false;
-                    }
-
-                    /* ---------- filtro por MARCA ---------- */
-                    if (checkboxFiltroMarca.isSelected()) {
-                        String marca = comboMarca.getSelectedItem().toString();
-                        if (!v.getMarca().name().equalsIgnoreCase(marca)) return false;
-                    }
-
-                    /* ---------- filtro por CATEGORIA ---------- */
-                    if (checkboxFiltroCategoria.isSelected()) {
-                        String cat = comboCategoria.getSelectedItem().toString();
-                        if (v instanceof Automovel a) {
-                            if (!a.getCategoria().name().equalsIgnoreCase(cat)) return false;
-                        } else {
-                            return false; // não é automóvel → descarta
-                        }
-                    }
-
-                    return true;   // passou em todos os filtros marcados
-                }
-            };
-
-        // 2) aplica no sorter
-        veiculoSorter.setRowFilter(filtro);
-    }
-
     private void filtrarPorCpf(String cpf) {
         aplicarFiltroCliente(4, cpf);
     }
@@ -236,21 +189,21 @@ public class LocacaoPanel extends javax.swing.JPanel {
         /* tipo (automóvel / moto / van)  */
         comboTipo.setModel(
                 new javax.swing.DefaultComboBoxModel<>(
-                        locacaoController.obterTiposVeiculo()
+                        obterTiposVeiculo()
                 )
         );
 
         /* marca (VW, GM, Fiat, …)  */
         comboMarca.setModel(
                 new javax.swing.DefaultComboBoxModel<>(
-                        locacaoController.obterMarcas()
+                        obterMarcas()
                 )
         );
 
         /* categoria (POPULAR, INTERMEDIARIO, LUXO)  */
         comboCategoria.setModel(
                 new javax.swing.DefaultComboBoxModel<>(
-                        locacaoController.obterCategorias()
+                        obterCategorias()
                 )
         );
     }
@@ -616,12 +569,12 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
     public void pesquisar() {                                                       
         locacaoController.listarVeiculos();
-        aplicarFiltrosVeiculo();        
+        VeiculoService.aplicarFiltrosVeiculo(veiculoSorter, checkboxFiltroTipo, checkboxFiltroMarca, checkboxFiltroCategoria, comboCategoria, comboMarca, comboTipo);        
     }
     
     private void botaoPesquisarveiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarveiculosActionPerformed
         locacaoController.listarVeiculos();
-        aplicarFiltrosVeiculo();
+        VeiculoService.aplicarFiltrosVeiculo(veiculoSorter, checkboxFiltroTipo, checkboxFiltroMarca, checkboxFiltroCategoria, comboCategoria, comboMarca, comboTipo);
     }//GEN-LAST:event_botaoPesquisarveiculosActionPerformed
 
     private void botaoLocarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLocarActionPerformed
@@ -663,7 +616,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
             //atualizando a lista de veículos e limpando os campos
             locacaoController.listarVeiculos(); // atualiza a tabela de veículos
-            aplicarFiltrosVeiculo(); // reaplica os filtros para remover o veículo locado da lista
+            VeiculoService.aplicarFiltrosVeiculo(veiculoSorter, checkboxFiltroTipo, checkboxFiltroMarca, checkboxFiltroCategoria, comboCategoria, comboMarca, comboTipo); // reaplica os filtros para remover o veículo locado da lista
             limparCampos();
 
         } catch (HeadlessException e) {
