@@ -4,6 +4,7 @@
  */
 package dao;
 
+import banco.BancoDadosCliente;
 import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
@@ -18,9 +19,9 @@ import static org.junit.Assert.*;
  *
  * @author mrblue
  */
-public class ClienteDAOTest {
+public class BancoDadosClienteTest {
     
-    public ClienteDAOTest() {
+    public BancoDadosClienteTest() {
     }
     
     @BeforeClass
@@ -42,14 +43,14 @@ public class ClienteDAOTest {
     @Test
     public void testIncrementoId() {
         int idEsperado = 21;
-        int idObtido = ClienteDAO.getId();
+        int idObtido = BancoDadosCliente.getId();
         
         assertEquals(idEsperado, idObtido);
     }
     
     @Test
     public void testListaInicialClientes() {
-        ClienteDAO dao = new ClienteDAO();
+        BancoDadosCliente dao = new BancoDadosCliente();
         List<Cliente> listaObtida = dao.listarTodos();
         int numeroClientesEsperado = 20;
         int numeroClientesObtido = listaObtida.size();

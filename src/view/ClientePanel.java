@@ -69,7 +69,6 @@ public class ClientePanel extends javax.swing.JPanel {
         idCliente = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
         cpf = new javax.swing.JLabel();
-        txtCpf = new javax.swing.JTextField();
         txtNome = new javax.swing.JTextField();
         nome = new javax.swing.JLabel();
         sobrenome = new javax.swing.JLabel();
@@ -82,6 +81,7 @@ public class ClientePanel extends javax.swing.JPanel {
         btnSalvar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         tituloCadastroCliente = new javax.swing.JLabel();
+        txtCpf = new javax.swing.JFormattedTextField();
 
         tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -108,8 +108,6 @@ public class ClientePanel extends javax.swing.JPanel {
         txtId.setFocusable(false);
 
         cpf.setText("CPF");
-
-        txtCpf.setText("txtCpf");
 
         txtNome.setText("txtNome");
 
@@ -150,6 +148,12 @@ public class ClientePanel extends javax.swing.JPanel {
 
         tituloCadastroCliente.setText("Cadastro de Cliente");
 
+        try {
+            txtCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -167,21 +171,17 @@ public class ClientePanel extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(btnExcluir))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(idCliente))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txtCpf, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                            .addComponent(txtId))
-                                        .addGap(19, 19, 19))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(rg)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                                        .addComponent(txtRg, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(idCliente)
+                                    .addComponent(rg))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtRg, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtId, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                        .addComponent(txtCpf)))
+                                .addGap(32, 32, 32)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(sobrenome)
                                     .addComponent(nome)
@@ -210,9 +210,9 @@ public class ClientePanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cpf)
-                    .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sobrenome)
-                    .addComponent(txtSobrenome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSobrenome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(rg)
@@ -313,7 +313,7 @@ public class ClientePanel extends javax.swing.JPanel {
     private javax.swing.JLabel sobrenome;
     private javax.swing.JTable tblClientes;
     private javax.swing.JLabel tituloCadastroCliente;
-    private javax.swing.JTextField txtCpf;
+    private javax.swing.JFormattedTextField txtCpf;
     private javax.swing.JTextField txtEndereco;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNome;

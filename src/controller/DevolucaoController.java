@@ -9,14 +9,14 @@ package controller;
  * @author victor
  */
 
-import dao.VeiculoDAO;
+import banco.BancoDadosVeiculo;
 import java.util.List;
 import java.util.stream.Collectors;
 import model.Veiculo;
 import model.enums.Estado;
 
 public class DevolucaoController {
-    private VeiculoDAO veiculoDAO = new VeiculoDAO();
+    private BancoDadosVeiculo veiculoDAO = new BancoDadosVeiculo();
 
     public List<Veiculo> listarVeiculosLocados() {
         return veiculoDAO.listarTodos().stream()

@@ -4,22 +4,21 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import dao.ClienteDAO;
-import dao.LocacaoDAO;
-import dao.VeiculoDAO;
+import banco.BancoDadosCliente;
+import banco.BancoDadosLocacao;
+import banco.BancoDadosVeiculo;
 import model.Cliente;
 import model.Veiculo;
-import model.enums.Categoria;
 import model.enums.Estado;
-import model.enums.Marca;
 import table.ClienteTableModel;
 import table.VeiculoTableModel;
 import util.RegraNegocioException;
 
 public class LocacaoController {
-    private VeiculoDAO veiculoDAO = new VeiculoDAO();
-    private ClienteDAO clienteDAO = new ClienteDAO();
-    private LocacaoDAO locacaoDAO = new LocacaoDAO();
+
+    private BancoDadosVeiculo veiculoDAO = new BancoDadosVeiculo();
+    private BancoDadosCliente clienteDAO = new BancoDadosCliente();
+    private BancoDadosLocacao locacaoDAO = new BancoDadosLocacao();
     private ClienteTableModel clienteTableModel;
     private VeiculoTableModel veiculoTableModel;
 
@@ -27,30 +26,37 @@ public class LocacaoController {
         this.clienteTableModel = clienteTableModel;
         this.veiculoTableModel = veiculoTableModel;
     }
-    
+
     public void locar(String placaSelecionada, String cpfSelecionado,
-               int dias, Calendar data) throws RegraNegocioException{
+            int dias, Calendar dataLocacao) throws RegraNegocioException {
         Veiculo v = veiculoDAO.buscarPorPlaca(placaSelecionada);
         Cliente c = clienteDAO.buscarPorCpf(cpfSelecionado).orElseThrow(() -> new RegraNegocioException("CPF não encontrado"));
-            
-            if (veiculoDAO.clientePossuiVeiculoLocado(c.getId())){
-                throw new RegraNegocioException("Este cliente já possui um veículo locado");   
-            }
+
+        if (veiculoDAO.clientePossuiVeiculoLocado(c.getId())) {
+            throw new RegraNegocioException("Este cliente já possui um veículo locado");
+        }
+
+        if (c == null) {
+            throw new RegraNegocioException("Cliente não pode ser nulo");
+        }
         
-            if (c == null) {
-                throw new RegraNegocioException("Cliente não pode ser nulo");
-            }
-            if (dias <= 0) {
-                throw new RegraNegocioException("Número de dias deve ser maior que zero");
-            }
-            if (v.getEstado() == Estado.LOCADO) {
-                throw new RegraNegocioException("Veículo já está locado");
-            }
-            if (v.getEstado() == Estado.VENDIDO) {
-                throw new RegraNegocioException("Veículo já foi vendido");
-            }
+        if (dias <= 0) {
+            throw new RegraNegocioException("Número de dias deve ser maior que zero");
+        }
         
-        v.locar(dias, data, c);
+        if (v.getEstado() == Estado.LOCADO) {
+            throw new RegraNegocioException("Veículo já está locado");
+        }
+        
+        if (v.getEstado() == Estado.VENDIDO) {
+            throw new RegraNegocioException("Veículo já foi vendido");
+        }
+        
+        if (dataLocacao.before(getDataHoje())) {
+            throw new RegraNegocioException("Não é permitido data de locação no passado.");
+        }
+
+        v.locar(dias, dataLocacao, c);
         locacaoDAO.salvar(v.getLocacao());
     }
 
@@ -71,8 +77,8 @@ public class LocacaoController {
         }
 
         Cliente c = clienteDAO.buscarPorCpf(cpf.trim())
-                            .orElseThrow(() ->
-                                new RegraNegocioException("CPF não encontrado"));
+                .orElseThrow(()
+                        -> new RegraNegocioException("CPF não encontrado"));
 
         clienteTableModel.setClientes(Arrays.asList(c));
     }
@@ -93,5 +99,13 @@ public class LocacaoController {
         clienteTableModel.setClientes(clienteDAO.buscarPorSobrenome(sobrenome.trim()));
     }
 
-}
+    private Calendar getDataHoje() {
+        Calendar hoje = Calendar.getInstance();
+        hoje.set(Calendar.HOUR_OF_DAY, 0);
+        hoje.set(Calendar.MINUTE, 0);
+        hoje.set(Calendar.SECOND, 0);
+        hoje.set(Calendar.MILLISECOND, 0);
+        return hoje;
 
+    }
+}
