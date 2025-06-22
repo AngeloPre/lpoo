@@ -57,7 +57,6 @@ public class DevolucaoPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaVeiculos = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        btnAtualizar = new javax.swing.JButton();
 
         btnDevolver.setText("Devolver");
         btnDevolver.addActionListener(new java.awt.event.ActionListener() {
@@ -81,13 +80,6 @@ public class DevolucaoPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Devolução de Veículos");
 
-        btnAtualizar.setText("Atualizar Lista");
-        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAtualizarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,9 +93,7 @@ public class DevolucaoPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnDevolver)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAtualizar)))
+                        .addComponent(btnDevolver)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,9 +104,7 @@ public class DevolucaoPanel extends javax.swing.JPanel {
                 .addGap(9, 9, 9)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDevolver)
-                    .addComponent(btnAtualizar))
+                .addComponent(btnDevolver)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -144,14 +132,8 @@ public class DevolucaoPanel extends javax.swing.JPanel {
     public void carregarDadosPublic() {
         carregarDados();
     }
-    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
-        // TODO add your handling code here:
-        carregarDados();
-    }//GEN-LAST:event_btnAtualizarActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAtualizar;
     private javax.swing.JButton btnDevolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

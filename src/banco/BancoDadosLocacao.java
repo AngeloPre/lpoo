@@ -1,10 +1,10 @@
-package dao;
+package banco;
 
 import java.util.ArrayList;
 import java.util.List;
 import model.Locacao;
 
-public class LocacaoDAO {
+public class BancoDadosLocacao {
     private static List<Locacao> locacoes = new ArrayList<>();
 
     public void salvar(Locacao l) { 

@@ -4,7 +4,7 @@
  */
 package controller;
 
-import dao.VeiculoDAO;
+import banco.BancoDadosVeiculo;
 import java.util.List;
 import java.util.stream.Collectors;
 import model.Veiculo;
@@ -15,11 +15,11 @@ import table.VendaVeiculoTableModel;
  * @author mrVictor
  */
 public class VendaVeiculoController {
-    private VeiculoDAO veiculoDAO = new VeiculoDAO();
+    private BancoDadosVeiculo veiculoDAO = new BancoDadosVeiculo();
     private final VendaVeiculoTableModel vendaVeiculoTableModel;
 
     public VendaVeiculoController(VendaVeiculoTableModel tableModel) {
-        this.veiculoDAO = new VeiculoDAO();
+        this.veiculoDAO = new BancoDadosVeiculo();
         this.vendaVeiculoTableModel = tableModel;
     }
     

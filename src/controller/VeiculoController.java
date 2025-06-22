@@ -1,13 +1,13 @@
 package controller;
 
-import dao.VeiculoDAO;
+import banco.BancoDadosVeiculo;
 import java.util.List;
 import model.Veiculo;
 import table.VeiculoTableModel;
 
 public class VeiculoController {
 
-    private VeiculoDAO dao = new VeiculoDAO();
+    private BancoDadosVeiculo dao = new BancoDadosVeiculo();
     private VeiculoTableModel veiculoTableDataModel;
 
     public VeiculoController(VeiculoTableModel veiculoTableDataModel) {

@@ -4,7 +4,7 @@
  */
 package controller;
 
-import dao.ClienteDAO;
+import banco.BancoDadosCliente;
 import model.Cliente;
 import table.ClienteTableModel;
 import org.junit.After;
@@ -67,7 +67,7 @@ public class ClienteControllerTest {
         ClienteController controller = new ClienteController(table);
         Cliente cli = new Cliente("Beto", "Bom de Bola do outro testes mesmo", "177087552", "67129346051", "Rua dos Jogadores,10");
         controller.salvarCliente(cli);
-        int numeroRegistrosEsperado = 21; //Depende da quantidade de clientes criados na classe ClienteDAO
+        int numeroRegistrosEsperado = 21; //Depende da quantidade de clientes criados na classe BancoDadosCliente
         int numeroRegistrosObtido = table.getRowCount();
         assertEquals(numeroRegistrosEsperado, numeroRegistrosObtido);
     }
@@ -79,7 +79,7 @@ public class ClienteControllerTest {
         ClienteController controller = new ClienteController(table);
         Cliente cli = new Cliente(1, "Beto", "Atualiza", "177087552", "67129346051", "Rua dos Jogadores,10");
         controller.salvarCliente(cli);
-        int numeroRegistrosEsperado = 21; //Depende da quantidade de clientes criados na classe ClienteDAO
+        int numeroRegistrosEsperado = 21; //Depende da quantidade de clientes criados na classe BancoDadosCliente
         int numeroRegistrosObtido = table.getRowCount();
         assertEquals(numeroRegistrosEsperado, numeroRegistrosObtido);
 

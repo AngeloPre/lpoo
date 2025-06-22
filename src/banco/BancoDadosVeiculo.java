@@ -1,4 +1,4 @@
-package dao;
+package banco;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import model.enums.ModeloAutomovel;
 import model.enums.ModeloMotocicleta;
 import model.enums.ModeloVan;
 
-public class VeiculoDAO {
+public class BancoDadosVeiculo {
 
     private static List<Veiculo> veiculos = new ArrayList<>();
 

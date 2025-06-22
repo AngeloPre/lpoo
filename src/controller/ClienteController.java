@@ -1,7 +1,7 @@
 package controller;
 
-import dao.ClienteDAO;
-import dao.VeiculoDAO;
+import banco.BancoDadosCliente;
+import banco.BancoDadosVeiculo;
 import java.util.List;
 import model.Cliente;
 import table.ClienteTableModel;
@@ -9,7 +9,7 @@ import util.RegraNegocioException;
 
 public class ClienteController {
 
-    private ClienteDAO dao = new ClienteDAO();
+    private BancoDadosCliente dao = new BancoDadosCliente();
     private ClienteTableModel clienteTableModel;
 
     public ClienteController(ClienteTableModel clienteTableModel) {
@@ -46,7 +46,7 @@ public class ClienteController {
     }
     
     public void excluirCliente(int id)throws RegraNegocioException {
-        VeiculoDAO veiculoDAO = new VeiculoDAO();
+        BancoDadosVeiculo veiculoDAO = new BancoDadosVeiculo();
         
         if (veiculoDAO.clientePossuiVeiculoLocado(id)) {
             throw new RegraNegocioException("Não é possível excluir cliente com locação ativa.");
