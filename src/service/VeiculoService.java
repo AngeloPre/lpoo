@@ -72,13 +72,8 @@ public class VeiculoService {
                 /* ---------- filtro por CATEGORIA ---------- */
                 if (checkboxFiltroCategoria.isSelected()) {
                     String cat = comboCategoria.getSelectedItem().toString();
-                    if (v instanceof Automovel a) {
-                        if (!a.getCategoria().name().equalsIgnoreCase(cat)) {
-                            return false;
-                        }
-                    } else {
-                        return false; // não é automóvel → descarta
-                    }
+                    if (!v.getCategoria().name().equalsIgnoreCase(cat))
+                        return false;
                 }
                 return true; // passou em todos os filtros marcados
             }
