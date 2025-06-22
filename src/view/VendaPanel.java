@@ -6,7 +6,11 @@ package view;
 
 import controller.VendaVeiculoController;
 import javax.swing.JOptionPane;
+import javax.swing.table.TableRowSorter;
 import model.Veiculo;
+import service.VeiculoService;
+import static service.VeiculoService.*;
+import table.VeiculoTableModel;
 import table.VendaVeiculoTableModel;
 
 /**
@@ -16,7 +20,8 @@ import table.VendaVeiculoTableModel;
 public class VendaPanel extends javax.swing.JPanel {
 
     private VendaVeiculoController vendaVeiculoController = null;
-    private VendaVeiculoTableModel vendaVeiculoTableModel = null;
+    private VeiculoTableModel vendaVeiculoTableModel = new VendaVeiculoTableModel(); 
+    private TableRowSorter<VeiculoTableModel> veiculoSorter;
 
     public VendaPanel() {
         initComponents();
@@ -33,6 +38,8 @@ public class VendaPanel extends javax.swing.JPanel {
 
         // Constrói os componentes visuais (botões, tabelas, etc.)
         initComponents();
+        configurarSorterVeiculos();
+        popularCombos();
         
         // Vincula o modelo de dados correto (vendaVeiculoTableModel) à JTable
         tableVeiculosVenda.setModel(this.vendaVeiculoTableModel);
@@ -54,8 +61,33 @@ public class VendaPanel extends javax.swing.JPanel {
         }
         return null;
     }
-    
-    
+        private void configurarSorterVeiculos() {
+        veiculoSorter = new TableRowSorter<>(vendaVeiculoTableModel);
+        tableVeiculosVenda.setRowSorter(veiculoSorter);
+
+    }
+        private void popularCombos() {
+        /* tipo (automóvel / moto / van)  */
+        comboTipo.setModel(
+                new javax.swing.DefaultComboBoxModel<>(
+                        obterTiposVeiculo()
+                )
+        );
+
+        /* marca (VW, GM, Fiat, …)  */
+        comboMarca.setModel(
+                new javax.swing.DefaultComboBoxModel<>(
+                        obterMarcas()
+                )
+        );
+
+        /* categoria (POPULAR, INTERMEDIARIO, LUXO)  */
+        comboCategoria.setModel(
+                new javax.swing.DefaultComboBoxModel<>(
+                        obterCategorias()
+                )
+        );
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,6 +102,13 @@ public class VendaPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableVeiculosVenda = new javax.swing.JTable();
         btnVenderVeiculo = new javax.swing.JButton();
+        checkboxFiltroCategoria = new javax.swing.JCheckBox();
+        checkboxFiltroMarca = new javax.swing.JCheckBox();
+        checkboxFiltroTipo = new javax.swing.JCheckBox();
+        comboCategoria = new javax.swing.JComboBox<>();
+        comboMarca = new javax.swing.JComboBox<>();
+        comboTipo = new javax.swing.JComboBox<>();
+        botaoPesquisarveiculos = new javax.swing.JButton();
 
         jLabel1.setText("Veículos Disponíveis para Venda");
 
@@ -93,6 +132,25 @@ public class VendaPanel extends javax.swing.JPanel {
             }
         });
 
+        checkboxFiltroCategoria.setText("Filtrar por Categoria");
+
+        checkboxFiltroMarca.setText("Filtrar por Marca");
+
+        checkboxFiltroTipo.setText("Filtrar por Tipo");
+
+        comboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        comboMarca.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        comboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        botaoPesquisarveiculos.setText("Pesquisar Veículos");
+        botaoPesquisarveiculos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoPesquisarveiculosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,10 +163,22 @@ public class VendaPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE)
+                            .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(checkboxFiltroTipo)
+                                    .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(checkboxFiltroMarca)
+                                    .addComponent(comboMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(comboCategoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(checkboxFiltroCategoria, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(botaoPesquisarveiculos)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -116,8 +186,19 @@ public class VendaPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkboxFiltroTipo)
+                    .addComponent(checkboxFiltroMarca)
+                    .addComponent(checkboxFiltroCategoria))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoPesquisarveiculos))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnVenderVeiculo)
                 .addGap(12, 12, 12))
@@ -149,9 +230,21 @@ public class VendaPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnVenderVeiculoActionPerformed
 
+    private void botaoPesquisarveiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarveiculosActionPerformed
+        vendaVeiculoController.listarVeiculosParaVenda();
+        VeiculoService.aplicarFiltrosVeiculo(veiculoSorter, checkboxFiltroTipo, checkboxFiltroMarca, checkboxFiltroCategoria, comboCategoria, comboMarca, comboTipo);
+    }//GEN-LAST:event_botaoPesquisarveiculosActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botaoPesquisarveiculos;
     private javax.swing.JButton btnVenderVeiculo;
+    private javax.swing.JCheckBox checkboxFiltroCategoria;
+    private javax.swing.JCheckBox checkboxFiltroMarca;
+    private javax.swing.JCheckBox checkboxFiltroTipo;
+    private javax.swing.JComboBox<String> comboCategoria;
+    private javax.swing.JComboBox<String> comboMarca;
+    private javax.swing.JComboBox<String> comboTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableVeiculosVenda;

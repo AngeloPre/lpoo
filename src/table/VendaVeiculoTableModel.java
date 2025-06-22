@@ -15,7 +15,7 @@ import model.Veiculo;
  *
  * @author victor
  */
-public class VendaVeiculoTableModel extends AbstractTableModel {
+public class VendaVeiculoTableModel extends VeiculoTableModel {
     private List<Veiculo> veiculos;
     private final String[] colunas = {"Placa", "Marca", "Modelo", "Ano", "Preço de Venda"};
 

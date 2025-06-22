@@ -15,10 +15,13 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 import model.Locacao;
 import model.Veiculo;
+import model.Automovel;
+import model.Motocicleta;
+import model.Van;
 
 public class DevolucaoTableModel extends AbstractTableModel {
     private List<Veiculo> veiculosLocados;
-    private final String[] colunas = {"Nome Cliente", "Placa", "Marca", "Data Locação", "Preço Diária", "Dias Locado", "Valor Locação"};
+    private final String[] colunas = {"Nome Cliente", "Placa", "Marca", "Modelo", "Ano", "Data Locação", "Preço Diária", "Dias Locado", "Valor Locação"};
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public DevolucaoTableModel() {
@@ -41,13 +44,31 @@ public class DevolucaoTableModel extends AbstractTableModel {
         if (locacao == null) return null;
 
         switch (columnIndex) {
-            case 0: return locacao.getCliente().getNome() + " " + locacao.getCliente().getSobrenome();
-            case 1: return veiculo.getPlaca();
-            case 2: return veiculo.getMarca();
-            case 3: return sdf.format(locacao.getData().getTime());
-            case 4: return String.format("R$%,.2f", veiculo.getValorDiariaLocacao());
-            case 5: return locacao.getDias(); // Precisa adicionar o getDias() em Locacao.java - adicionado
-            case 6: return String.format("R$%,.2f", locacao.getValor());
+            case 0: //nome cliente
+                return locacao.getCliente().getNome() + " " + locacao.getCliente().getSobrenome();
+            case 1: //placa
+                return veiculo.getPlaca();
+            case 2: //marca
+                return veiculo.getMarca();
+            case 3: //modelo
+                if (veiculo instanceof Automovel){
+                    return ((Automovel) veiculo).getModelo();
+                } else if (veiculo instanceof Motocicleta){
+                    return ((Motocicleta) veiculo).getModelo();
+                } else if (veiculo instanceof Van){
+                    return ((Van) veiculo).getModelo();
+                }
+                return "N/A";
+            case 4: //ano
+                return veiculo.getAno();
+            case 5: //data
+                return sdf.format(locacao.getData().getTime());
+            case 6: //preço da diaria
+                return String.format("R$%,.2f", veiculo.getValorDiariaLocacao());
+            case 7: //dias locado
+                return locacao.getDias(); 
+            case 8: //valor locacao
+                return String.format("R$%,.2f", locacao.getValor());
             default: return null;
         }
     }

@@ -93,21 +93,5 @@ public class LocacaoController {
         clienteTableModel.setClientes(clienteDAO.buscarPorSobrenome(sobrenome.trim()));
     }
 
-    public String[] obterTiposVeiculo() {
-        // se você não tiver um enum específico para tipo, devolve “na mão”
-        return new String[]{"AUTOMOVEL", "MOTOCICLETA", "VAN"};
-    }
-
-        public String[] obterMarcas() {
-        return Arrays.stream(Marca.values())
-                     .map(marca -> marca.name())
-                     .toArray(size -> new String[size]);
-    }
-
-    public String[] obterCategorias() {
-        return Arrays.stream(Categoria.values())
-                     .map(categoria -> categoria.name())
-                     .toArray(size -> new String[size]);
-    }
 }
 

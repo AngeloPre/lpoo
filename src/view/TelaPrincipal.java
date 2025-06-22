@@ -102,13 +102,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
         
         int index = jTabbedPane1.getSelectedIndex();        
         switch (index) {
-            case 4:
-                this.devolucaoPanel1.carregarDadosPublic();
-                break;
-            case 2:
+            case 2: // Aba de Locação
                 this.locacaoPanel1.pesquisar();
                 break;
-            default:
+            case 3: // Aba de Venda de Veículos 
+                this.vendaVeiculoController.atualizarTabela();
+                break;
+            case 4: // Aba de Devolução
+                this.devolucaoPanel1.carregarDadosPublic();
+                break;
+        default:
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 

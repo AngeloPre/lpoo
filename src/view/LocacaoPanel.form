@@ -25,7 +25,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
@@ -46,7 +46,7 @@
                           <Component id="btnBuscarCliente" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="scrollCliente" pref="0" max="32767" attributes="0"/>
+                      <Component id="scrollCliente" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -74,37 +74,44 @@
                                       <EmptySpace max="32767" attributes="0"/>
                                       <Component id="botaoPesquisarveiculos" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="checkboxFiltroCategoria" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="checkboxFiltroCategoria" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="label1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="placaVeiculoSelecionado" alignment="0" pref="150" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="placaVeiculoSelecionado" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
+                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="valorDiariaVeiculoSelecionado" pref="150" max="32767" attributes="0"/>
-                          <Component id="label2" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="valorDiariaVeiculoSelecionado" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
+                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="label3" max="32767" attributes="0"/>
-                          <Component id="campoDiasDeAluguel" pref="150" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="campoDiasDeAluguel" min="-2" pref="150" max="-2" attributes="0"/>
+                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="campoCalculoPagamentoLocacao" pref="250" max="32767" attributes="0"/>
-                          <Component id="label4" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="campoCalculoPagamentoLocacao" alignment="0" min="-2" pref="189" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="botaoLocar" min="-2" pref="150" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="campoDataLocacao" min="-2" pref="134" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="botaoLocar" min="-2" pref="150" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -154,22 +161,24 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="scrollVeiculo" min="-2" pref="164" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="label1" min="-2" max="-2" attributes="0"/>
-                  <Component id="label3" min="-2" max="-2" attributes="0"/>
-                  <Component id="label2" min="-2" max="-2" attributes="0"/>
-                  <Component id="label4" min="-2" max="-2" attributes="0"/>
-              </Group>
               <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="placaVeiculoSelecionado" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="valorDiariaVeiculoSelecionado" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="campoDiasDeAluguel" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="campoCalculoPagamentoLocacao" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="botaoLocar" alignment="3" max="32767" attributes="0"/>
+                  <Component id="campoDataLocacao" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -370,34 +379,47 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Filtrar Veiculos por Marca"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkboxFiltroMarcaActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="checkboxFiltroCategoria">
       <Properties>
         <Property name="text" type="java.lang.String" value="Filtrar Veiculos por Categoria"/>
       </Properties>
     </Component>
-    <Component class="java.awt.Label" name="label1">
+    <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="text" type="java.lang.String" value="Placa"/>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value=""/>
-      </AccessibilityProperties>
     </Component>
-    <Component class="java.awt.Label" name="label2">
+    <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
         <Property name="text" type="java.lang.String" value="Valor Di&#xe1;ria"/>
       </Properties>
     </Component>
-    <Component class="java.awt.Label" name="label3">
+    <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Dias de aluguel"/>
+        <Property name="text" type="java.lang.String" value="Dias de Aluguel"/>
       </Properties>
     </Component>
-    <Component class="java.awt.Label" name="label4">
+    <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Total da loca&#xe7;&#xe3;o"/>
+        <Property name="text" type="java.lang.String" value="Total da Loca&#xe7;&#xe3;o"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Data da Loca&#xe7;&#xe3;o"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="campoDataLocacao">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jTextField1"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="campoDataLocacaoActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
