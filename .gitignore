@@ -1,2 +1,14 @@
 .vscode
 .history
+/bin/
+/build/
+/dist/
+/nbproject/private/
+*.class
+*.log
+/bin/
+/dist/
+/nbproject/private/
+
+# libs locais ou jar de 3º
+/lib/
