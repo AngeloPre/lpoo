@@ -244,7 +244,7 @@ public class LocacaoPanel extends javax.swing.JPanel {
 
         /* ---------- 1) dias de aluguel ---------- */
         String diasTxt = campoDiasDeAluguel.getText().trim();
-        if (diasTxt.isBlank()) {           // campo vazio
+        if (diasTxt.isBlank()) {                       // campo vazio
             campoCalculoPagamentoLocacao.setText("0");
             return;
         }
@@ -252,63 +252,28 @@ public class LocacaoPanel extends javax.swing.JPanel {
         int dias;
         try {
             dias = Integer.parseInt(diasTxt);
-            if (dias <= 0) {
-                throw new NumberFormatException();
-            }
+            if (dias <= 0) throw new NumberFormatException();
         } catch (NumberFormatException ex) {
             campoCalculoPagamentoLocacao.setText("Dias deve ser inteiro > 0");
             return;
         }
 
-        /* ---------- 2) valor da diária ---------- */
-        String diariaTxt = valorDiariaVeiculoSelecionado.getText().trim();
-
-        if (diariaTxt.isBlank()) {          // usuário ainda não escolheu veículo
+        /* ---------- 2) diária vinda do objeto selecionado ---------- */
+        int viewRow = tblVeiculo.getSelectedRow();
+        if (viewRow == -1) {
             campoCalculoPagamentoLocacao.setText("Selecione um veículo");
             return;
         }
 
-        double diaria;
-        try {
-            diaria = parseValorMonetario(diariaTxt);
-        } catch (ParseException ex) {
-            campoCalculoPagamentoLocacao.setText("Valor da diária inválido");
-            return;
-        }
-
+        int modelRow   = tblVeiculo.convertRowIndexToModel(viewRow);
+        Veiculo vSel   = veiculoTableModel.getVeiculo(modelRow); // objeto
+        double diaria  = vSel.getValorDiariaLocacao();
 
         /* ---------- 3) cálculo ---------- */
         double total = dias * diaria;
 
-        // Agora formata em moeda "pt-BR"  →  R$ 900,00
         NumberFormat nfBR = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-        campoCalculoPagamentoLocacao.setText(nfBR.format(total));
-
-    }
-
-    private double parseValorMonetario(String txt) throws ParseException {
-        if (txt == null || txt.isBlank()) {
-            throw new ParseException("vazio", 0);
-        }
-
-        // tenta parsear como moeda pt-BR
-        NumberFormat nfBR = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-        try {
-            return nfBR.parse(txt).doubleValue();
-        } catch (ParseException ignore) {
-            // remove tudo que não for dígito, vírgula ou ponto e tenta de novo
-            String clean = txt.replaceAll("[^0-9.,]", "");
-            // se tiver duas ocorrências de '.' ou ',' ficamos só com a última
-            int lastComma = clean.lastIndexOf(',');
-            int lastDot = clean.lastIndexOf('.');
-            int sep = Math.max(lastComma, lastDot);
-            if (sep != -1) {
-                // tira separadores anteriores (milhar)
-                clean = clean.substring(0, sep).replaceAll("[.,]", "") + "."
-                        + clean.substring(sep + 1); // normaliza decimal para ponto
-            }
-            return Double.parseDouble(clean);
-        }
+        campoCalculoPagamentoLocacao.setText(nfBR.format(total)); // ex.:
     }
 
     private void limparCampos() {

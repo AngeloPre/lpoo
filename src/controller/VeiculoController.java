@@ -3,6 +3,7 @@ package controller;
 import banco.BancoDadosVeiculo;
 import java.util.List;
 import model.Veiculo;
+import model.enums.Estado;
 import table.VeiculoTableModel;
 
 public class VeiculoController {
@@ -22,6 +23,11 @@ public class VeiculoController {
     public void incluirVeiculo(Veiculo veiculo) {
         dao.adicionarVeiculo(veiculo);
         listarVeiculos();
+    }
+    
+    public Estado[] estadosVeiculoNovo(){
+        Estado[] novo = {Estado.DISPONIVEL, Estado.NOVO};
+        return novo;
     }
 
 }
