@@ -1,6 +1,6 @@
 package controller;
 
-import banco.BancoDadosVeiculo;
+import banco.VeiculoDaoSql;
 import java.util.List;
 import model.Veiculo;
 import model.enums.Estado;
@@ -8,20 +8,24 @@ import table.VeiculoTableModel;
 
 public class VeiculoController {
 
-    private BancoDadosVeiculo dao = new BancoDadosVeiculo();
-    private VeiculoTableModel veiculoTableDataModel;
+    private final VeiculoDaoSql dao = new VeiculoDaoSql();
+    private final VeiculoTableModel veiculoTableDataModel;
 
     public VeiculoController(VeiculoTableModel veiculoTableDataModel) {
         this.veiculoTableDataModel = veiculoTableDataModel;
     }
 
     public void listarVeiculos() {
-        List<Veiculo> veiculos = dao.listarTodos();
-        veiculoTableDataModel.setVeiculos(veiculos);
+        try {
+            List<Veiculo> veiculos = dao.getAll();
+            veiculoTableDataModel.setVeiculos(veiculos);
+        } catch (Exception e) {}
     }
 
     public void incluirVeiculo(Veiculo veiculo) {
-        dao.adicionarVeiculo(veiculo);
+        try {
+            dao.add(veiculo);
+        } catch (Exception e) {}
         listarVeiculos();
     }
     

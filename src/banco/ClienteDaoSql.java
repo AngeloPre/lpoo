@@ -1,6 +1,5 @@
 package banco;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,16 +11,179 @@ import java.util.Optional;
 import model.Cliente;
 
 public class ClienteDaoSql implements ClienteDao {
-    final String addSql = "INSERT INTO cliente (nome, sobrenome, rg, cpf, endereco) VALUES (?, ?, ?, ?, ?)";
-    final String listAllSql = "SELECT * FROM cliente";
-    final String getByIdSql = "SELECT * FROM cliente WHERE id = ?";
-    final String updateSql = "UPDATE cliente SET nome = ?, sobrenome = ?, rg = ?, cpf = ?, endereco = ? WHERE id = ?";
-    final String deleteSql = "DELETE FROM cliente WHERE id = ?";
-    final String getByCpfSql = "SELECT * FROM cliente WHERE cpf = ?";
-    final String getByName = "SELECT * FROM cliente WHERE nome LIKE ?";
-    final String getBySurname = "SELECT * FROM cliente WHERE sobrenome LIKE ?";
-    
-    private Cliente mapResultSetToCliente(ResultSet rs) throws SQLException {
+
+    @Override
+    public void add(Cliente cliente) throws Exception {
+        String sql = "INSERT INTO cliente (nome, sobrenome, rg, cpf, endereco) " +
+                     "VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            
+            stmt.setString(1, cliente.getNome());
+            stmt.setString(2, cliente.getSobrenome());
+            stmt.setString(3, cliente.getRg());
+            stmt.setString(4, cliente.getCpf());
+            stmt.setString(5, cliente.getEndereco());
+            
+            int affectedRows = stmt.executeUpdate();
+            
+            if (affectedRows == 0) {
+                throw new SQLException("Falha ao inserir cliente, nenhuma linha afetada.");
+            }
+            
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    cliente.setId(rs.getInt(1));
+                } else {
+                    throw new SQLException("Falha ao inserir cliente, ID não obtido.");
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<Cliente> getAll() throws Exception {
+        String sql = "SELECT * FROM cliente ORDER BY nome, sobrenome";
+        List<Cliente> clientes = new ArrayList<>();
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            while (rs.next()) {
+                clientes.add(mapearCliente(rs));
+            }
+        }
+        
+        return clientes;
+    }
+
+    @Override
+    public Cliente getById(long id) throws Exception {
+        String sql = "SELECT * FROM cliente WHERE id = ?";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setLong(1, id);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapearCliente(rs);
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void update(Cliente cliente) throws Exception {
+        String sql = "UPDATE cliente SET nome = ?, sobrenome = ?, rg = ?, " +
+                     "cpf = ?, endereco = ? WHERE id = ?";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, cliente.getNome());
+            stmt.setString(2, cliente.getSobrenome());
+            stmt.setString(3, cliente.getRg());
+            stmt.setString(4, cliente.getCpf());
+            stmt.setString(5, cliente.getEndereco());
+            stmt.setInt(6, cliente.getId());
+            
+            int affectedRows = stmt.executeUpdate();
+            
+            if (affectedRows == 0) {
+                throw new SQLException("Falha ao atualizar cliente, nenhuma linha afetada.");
+            }
+        }
+    }
+
+    @Override
+    public void delete(Cliente cliente) throws Exception {
+        String sql = "DELETE FROM cliente WHERE id = ?";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, cliente.getId());
+            
+            int affectedRows = stmt.executeUpdate();
+            
+            if (affectedRows == 0) {
+                throw new SQLException("Falha ao deletar cliente, nenhuma linha afetada.");
+            }
+        }
+    }
+
+    @Override
+    public Optional<Cliente> getByCpf(String cpf) {
+        String sql = "SELECT * FROM cliente WHERE cpf = ?";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, cpf);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapearCliente(rs));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Cliente> getByName(String nome) {
+        String sql = "SELECT * FROM cliente WHERE nome ILIKE ? ORDER BY nome, sobrenome";
+        List<Cliente> clientes = new ArrayList<>();
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, "%" + nome + "%");
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    clientes.add(mapearCliente(rs));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return clientes;
+    }
+
+    @Override
+    public List<Cliente> getBySurname(String sobrenome) {
+        String sql = "SELECT * FROM cliente WHERE sobrenome ILIKE ? ORDER BY sobrenome, nome";
+        List<Cliente> clientes = new ArrayList<>();
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, "%" + sobrenome + "%");
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    clientes.add(mapearCliente(rs));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return clientes;
+    }
+
+    private Cliente mapearCliente(ResultSet rs) throws SQLException {
         return new Cliente(
             rs.getInt("id"),
             rs.getString("nome"),
@@ -30,171 +192,5 @@ public class ClienteDaoSql implements ClienteDao {
             rs.getString("cpf"),
             rs.getString("endereco")
         );
-    }
-
-    @Override
-    public void add(Cliente cliente) throws Exception {
-        String sql = addSql;
-        
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
-            pstmt.setString(1, cliente.getNome());
-            pstmt.setString(2, cliente.getSobrenome());
-            pstmt.setString(3, cliente.getRg());
-            pstmt.setString(4, cliente.getCpf());
-            pstmt.setString(5, cliente.getEndereco());
-            
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected > 0) {
-                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        cliente.setId(generatedKeys.getInt(1));
-                    }
-                }
-            }
-        } catch (SQLException | IOException e) {
-            throw new Exception("Error adding client: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public List<Cliente> getAll() throws Exception {
-        List<Cliente> clientes = new ArrayList<>();
-        String sql = listAllSql;
-
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-            
-            while (rs.next()) {
-                clientes.add(mapResultSetToCliente(rs));
-            }
-        } catch (SQLException | IOException e) {
-            throw new Exception("Error getting all clients: " + e.getMessage(), e);
-        }
-        return clientes;
-    }
-
-    @Override
-    public Cliente getById(long id) throws Exception {
-        String sql = getByIdSql;
-        
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setLong(1, id);
-            
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapResultSetToCliente(rs);
-                }
-            }
-        } catch (SQLException | IOException e) {
-            throw new Exception("Error getting client by ID: " + e.getMessage(), e);
-        }
-        return null; 
-    }
-
-    @Override
-    public void update(Cliente cliente) throws Exception {
-        String sql = updateSql;
-        
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, cliente.getNome());
-            pstmt.setString(2, cliente.getSobrenome());
-            pstmt.setString(3, cliente.getRg());
-            pstmt.setString(4, cliente.getCpf());
-            pstmt.setString(5, cliente.getEndereco());
-            pstmt.setInt(6, cliente.getId());
-            
-            pstmt.executeUpdate();
-        } catch (SQLException | IOException e) {
-            throw new Exception("Error updating client: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void delete(Cliente cliente) throws Exception {
-        String sql = deleteSql;
-        
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, cliente.getId());
-            
-            pstmt.executeUpdate();
-        } catch (SQLException | IOException e) {
-            throw new Exception("Error deleting client: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public Optional<Cliente> getByCpf(String cpf) {
-        String sql = getByCpfSql;
-        
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, cpf);
-            
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(mapResultSetToCliente(rs));
-                }
-            }
-        } catch (Exception e) {
-            // Log the error
-            e.printStackTrace();
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public List<Cliente> getByName(String nome) {
-        List<Cliente> clientes = new ArrayList<>();
-        // Using LIKE for partial matching (e.g., "jo" finds "João" and "Joana")
-        String sql = getByName;
-        
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, "%" + nome + "%");
-            
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    clientes.add(mapResultSetToCliente(rs));
-                }
-            }
-        } catch (Exception e) {
-            // Log the error
-            e.printStackTrace();
-        }
-        return clientes;
-    }
-
-    @Override
-    public List<Cliente> getBySurname(String sobrenome) {
-        List<Cliente> clientes = new ArrayList<>();
-        String sql = getBySurname;
-        
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, "%" + sobrenome + "%");
-            
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    clientes.add(mapResultSetToCliente(rs));
-                }
-            }
-        } catch (Exception e) {
-            // Log the error
-            e.printStackTrace();
-        }
-        return clientes;
     }
 }

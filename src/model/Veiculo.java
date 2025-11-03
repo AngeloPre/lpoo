@@ -10,6 +10,7 @@ import util.RegraNegocioException;
 
 public abstract class Veiculo implements VeiculoI {
 
+    private int id;
     private Marca marca;
     private Estado estado;
     private Locacao locacao;
@@ -33,6 +34,14 @@ public abstract class Veiculo implements VeiculoI {
         this.categoria = categoria;
         this.valorDeCompra = valorDeCompra;
         this.ano = ano;
+    }
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -90,6 +99,10 @@ public abstract class Veiculo implements VeiculoI {
     @Override
     public void vender() {
         estado = Estado.VENDIDO;
+    }
+    
+    public double getValorDeCompra() {
+        return this.valorDeCompra;
     }
     
 }
