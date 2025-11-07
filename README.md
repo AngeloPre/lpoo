@@ -41,6 +41,48 @@ O projeto segue a arquitetura **MVC (Model-View-Controller)** para organizar o c
 
 ---
 
+### Tabelas no BD
+
+ - As tabelas podem ser criadas com esse comando no PostgreSQL rodando na porta 5432:
+
+ ```sql
+ -- Tabela de Clientes
+CREATE TABLE cliente (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    sobrenome VARCHAR(100) NOT NULL,
+    rg VARCHAR(20) UNIQUE NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    endereco VARCHAR(255)
+);
+
+-- Tabela de Locações
+CREATE TABLE locacao (
+    id SERIAL PRIMARY KEY,
+    dias INTEGER NOT NULL,
+    valor DECIMAL(10,2) NOT NULL,
+    data_locacao DATE NOT NULL,
+    cliente_id INTEGER NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id) ON DELETE RESTRICT
+);
+
+-- Tabela principal de Veículos (Single Table Inheritance)
+CREATE TABLE veiculo (
+    id SERIAL PRIMARY KEY,
+    tipo_veiculo VARCHAR(20) NOT NULL, -- 'AUTOMOVEL', 'VAN', 'MOTOCICLETA'
+    marca VARCHAR(50) NOT NULL,
+    estado VARCHAR(20) NOT NULL,
+    categoria VARCHAR(20) NOT NULL,
+    valor_de_compra DECIMAL(12,2) NOT NULL,
+    placa VARCHAR(10) UNIQUE NOT NULL,
+    ano INTEGER NOT NULL,
+    modelo VARCHAR(50) NOT NULL,
+    locacao_id INTEGER,
+    FOREIGN KEY (locacao_id) REFERENCES locacao(id) ON DELETE SET NULL,
+    CHECK (tipo_veiculo IN ('AUTOMOVEL', 'VAN', 'MOTOCICLETA'))
+);
+ ```
+
 ## Funcionalidades principais
 
 - Cadastro, edição e exclusão de clientes.
