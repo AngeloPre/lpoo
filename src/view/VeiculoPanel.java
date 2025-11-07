@@ -4,7 +4,7 @@
  */
 package view;
 
-import controller.VeiculoController;
+import controller.VeiculoPanelController;
 import javax.swing.JOptionPane;
 import model.Veiculo;
 import model.Automovel;
@@ -13,28 +13,65 @@ import model.Van;
 import model.enums.Marca;
 import model.enums.Estado;
 import model.enums.Categoria;
-import table.VeiculoTableModel;
-
+import model.enums.ModeloAutomovel;
+import model.enums.ModeloMotocicleta;
+import model.enums.ModeloVan;
 /**
  *
  * @author mrblue
  */
 public class VeiculoPanel extends javax.swing.JPanel {
 
-    private VeiculoController veiculoController;
-    private VeiculoTableModel veiculoTableModel;
-    
-    public VeiculoPanel(VeiculoController veiculoController, VeiculoTableModel veiculoTableModel) {
-        this.veiculoController = veiculoController;
-        this.veiculoTableModel = veiculoTableModel;
-        initComponents();
-        
-    }
+    private VeiculoPanelController controller;
     
     public VeiculoPanel() {
         initComponents();
     }
+    
+    public void setController(VeiculoPanelController controller) {
+        this.controller = controller;
+    }
 
+    public Veiculo getVeiculoFormulario() throws Exception {
+        Marca marca = (Marca) MarcaVeiculo.getSelectedItem();
+        Estado estado = (Estado) EstadoVeiculo.getSelectedItem();
+        Categoria categoria = (Categoria) CategoriaVeiculo.getSelectedItem();
+        double valor = ((Number) valorVeiculo.getValue()).doubleValue();
+        String placa = (String) placaVeiculo.getValue();
+        String tipoSelecionado = (String) TipoVeiculo.getSelectedItem();
+        int ano = ((Number) anoVeiculo.getValue()).intValue();
+        Object modelo = modeloVeiculo.getSelectedItem();
+
+        if (ano < 1920 || ano > 2025) {
+            throw new IllegalArgumentException("Ano Inválido");
+        }
+
+        Veiculo veiculo = null;
+        switch (tipoSelecionado) {
+            case "Automóvel":
+                veiculo = new Automovel(marca, estado, null, categoria, valor, placa, ano, (ModeloAutomovel) modelo);
+                break;
+            case "Motocicleta":
+                veiculo = new Motocicleta(marca, estado, null, categoria, valor, placa, ano, (ModeloMotocicleta) modelo);
+                break;
+            case "Van":
+                veiculo = new Van(marca, estado, null, categoria, valor, placa, ano, (ModeloVan) modelo);
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo ainda não implementado");
+        }
+        return veiculo;
+    }
+
+    // Error and info display methods
+    public void apresentaErro(String erro) {
+        JOptionPane.showMessageDialog(null, erro + "\n", "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void apresentaInfo(String info) {
+        JOptionPane.showMessageDialog(null, info + "\n", "Informação", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -68,7 +105,7 @@ public class VeiculoPanel extends javax.swing.JPanel {
 
         jLabel2.setText("Estado");
 
-        EstadoVeiculo.setModel(new javax.swing.DefaultComboBoxModel<>(veiculoController.estadosVeiculoNovo()));
+        EstadoVeiculo.setModel(new javax.swing.DefaultComboBoxModel<>(Estado.values()));
 
         jLabel3.setText("Categoria");
 
@@ -254,39 +291,7 @@ public class VeiculoPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SalvarVeiculoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalvarVeiculoBtnActionPerformed
-        Marca marca = (Marca) MarcaVeiculo.getSelectedItem();
-        Estado estado = (Estado) EstadoVeiculo.getSelectedItem();
-        Categoria categoria = (Categoria) CategoriaVeiculo.getSelectedItem();
-        double valor = ((Number) valorVeiculo.getValue()).doubleValue();
-        String placa = (String) placaVeiculo.getValue();
-        String tipoSelecionado = (String) TipoVeiculo.getSelectedItem();
-        int ano = ((Number) anoVeiculo.getValue()).intValue();
-        Object modelo = modeloVeiculo.getSelectedItem();
-        
-        if (ano < 1920 || ano > 2025) {
-            JOptionPane.showMessageDialog(null, "Ano Inválido");
-            return;
-        }
-
-        Veiculo veiculo = null;
-        switch (tipoSelecionado){
-            case ("Automóvel"):
-            veiculo = new Automovel(marca, estado, null, categoria, valor, placa, ano, (model.enums.ModeloAutomovel) modelo);
-            break;
-            case ("Motocicleta"):
-            veiculo = new Motocicleta(marca, estado, null, categoria, valor, placa, ano, (model.enums.ModeloMotocicleta) modelo);
-            break;
-            case ("Van"):
-            veiculo = new Van(marca, estado, null, categoria, valor, placa, ano, (model.enums.ModeloVan) modelo);
-            break;
-            default:
-                JOptionPane.showMessageDialog(null, "Ainda não implementado...");
-        }
-
-        if (veiculo != null){
-            veiculoController.incluirVeiculo(veiculo);
-            JOptionPane.showMessageDialog(this, "Veiculo Salvo!");
-        }
+        controller.salvarVeiculo();
     }//GEN-LAST:event_SalvarVeiculoBtnActionPerformed
 
     private void TipoVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoVeiculoActionPerformed
