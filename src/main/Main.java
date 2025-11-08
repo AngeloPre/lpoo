@@ -1,9 +1,11 @@
 package main;
 
+import banco.VeiculoDaoSql;
 import controller.ClienteController;
 import controller.DevolucaoController;
 import controller.LocacaoController;
 import controller.VeiculoController;
+import controller.VeiculoPanelController;
 import controller.VendaVeiculoController;
 import javax.swing.SwingUtilities;
 import table.ClienteTableModel;
@@ -31,6 +33,9 @@ public class Main {
                 
                 VendaVeiculoController vendaVeiculoController = new VendaVeiculoController(vendaVeiculoTableModel);
                 
+                //Daos
+                VeiculoDaoSql veiculoDaoSql = new VeiculoDaoSql();
+                
                 TelaPrincipal tp = new TelaPrincipal(
                         clienteController, 
                         clienteTableModel,
@@ -40,9 +45,11 @@ public class Main {
                         devolucaoController,
                         devolucaoTableModel,
                         vendaVeiculoController,
-                        vendaVeiculoTableModel
-                );
+                        vendaVeiculoTableModel);
                 tp.setVisible(true);
+                
+                                //Controllers Novos
+                VeiculoPanelController veiculoPanelController = new VeiculoPanelController(tp.getVeiculoPanel() ,veiculoDaoSql);
 
                 // Inicializa a tabela de clientes
                 

@@ -8,6 +8,7 @@ import controller.ClienteController;
 import controller.DevolucaoController;
 import controller.LocacaoController;
 import controller.VeiculoController;
+import controller.VeiculoPanelController;
 import controller.VendaVeiculoController;
 import javax.swing.JPanel;
 import table.ClienteTableModel;
@@ -58,13 +59,33 @@ public class TelaPrincipal extends javax.swing.JFrame {
      
     }
 
+    public ClientePanel getClientePanel() {
+        return clientePanel1;
+    }
+
+    public DevolucaoPanel getDevolucaoPanel() {
+        return devolucaoPanel1;
+    }
+
+    public LocacaoPanel getLocacaoPanel() {
+        return locacaoPanel1;
+    }
+
+    public VendaPanel getVendaPanel() {
+        return vendaPanel1;
+    }
+
+    public VeiculoPanel getVeiculoPanel() {
+        return veiculoPanel1;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         clientePanel1 = new view.ClientePanel(this.clienteController, this.clienteTableModel);
-        veiculoPanel1 = new view.VeiculoPanel(this.veiculoController, this.veiculoTableModel);
+        veiculoPanel1 = new view.VeiculoPanel();
         locacaoPanel1 = new view.LocacaoPanel(this.locacaoController, this.clienteTableModel, this.veiculoTableModel);
         vendaPanel1 = new view.VendaPanel(this.vendaVeiculoController, this.vendaVeiculoTableModel);
         devolucaoPanel1 = new view.DevolucaoPanel(this.devolucaoController, this.devolucaoTableModel);
