@@ -23,7 +23,6 @@ public class DatabaseInitializer {
                 );
             """);
 
-            // 3️⃣ Cria tabela LOCACAO
             stmt.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS locacao (
                     id SERIAL PRIMARY KEY,
@@ -50,7 +49,7 @@ public class DatabaseInitializer {
             """);
 
             System.out.println("Tabelas verificadas/criadas com sucesso.");
-            
+
             System.out.println("Iniciando carga inicial do banco.");
 
             stmt.executeUpdate("""
@@ -86,7 +85,7 @@ public class DatabaseInitializer {
                 ('VAN','VW','DISPONIVEL','INTERMEDIARIO',150000,'VAN-4G58',2021,'Kombi',NULL)
                 ON CONFLICT (placa) DO NOTHING;
             """);
-            
+
             System.out.println("Carga inicial do banco realizada com sucesso.");
         } catch (SQLException e) {
             System.err.println("Erro ao inicializar o banco: " + e.getMessage());
