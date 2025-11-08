@@ -7,30 +7,23 @@ package view;
 import controller.ClienteController;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.JOptionPane;
 import model.Cliente;
 import table.ClienteTableModel;
-import util.RegraNegocioException;
 
 /**
  *
  * @author mrblue
  */
-public class ClientePanel extends javax.swing.JPanel {
+public class ClientePanel extends javax.swing.JPanel{
 
     private ClienteController clienteController;
-    private ClienteTableModel clienteTableModel;
+    private ClienteTableModel clienteTableModel = new ClienteTableModel();
 
     
     public ClientePanel() {
         initComponents();
-    }
-
-    public ClientePanel(ClienteController clienteController, ClienteTableModel clienteTableModel) {
-        this.clienteController = clienteController;
-        this.clienteTableModel = clienteTableModel;
-        initComponents();
-        tblClientes.setModel(clienteTableModel);
 
         tblClientes.addMouseListener(new MouseAdapter() {
                 @Override
@@ -39,20 +32,7 @@ public class ClientePanel extends javax.swing.JPanel {
                 }
             });
             txtId.setEditable(false);
-            limparCampos();
-            clienteController.listarClientes();
-            
-        }
-        private void limparCampos() {
-            txtId.setText("");
-            txtNome.setText("");
-            txtSobrenome.setText("");
-            txtRg.setText("");
-            txtCpf.setText("");
-            txtEndereco.setText("");
-            tblClientes.clearSelection();
-            btnSalvar.setEnabled(true);
-            btnExcluir.setEnabled(false);
+            limparFormulario();
         }
 
     /**
@@ -248,55 +228,16 @@ public class ClientePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tblClientesMouseClicked
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        limparCampos();
+        limparFormulario();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        try {
-            String campoId = txtId.getText();
-            int id = campoId.isBlank() ? 0 : Integer.parseInt(campoId);
-            Cliente novoCliente = new Cliente(
-                id,
-                txtNome.getText(),
-                txtSobrenome.getText(),
-                txtRg.getText(),
-                txtCpf.getText(),
-                txtEndereco.getText()
-            );
-            clienteController.salvarCliente(novoCliente); // Delega ao Controller
-            limparCampos();
-            JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        } catch (RegraNegocioException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao salvar cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace(); // Para depuração
-        }
+        clienteController.salvarCliente();
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int linhaSelecionada = tblClientes.getSelectedRow();
-        if (linhaSelecionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um cliente para excluir.");
-            return;
-        }
-        
-        int id = (int) clienteTableModel.getCliente(linhaSelecionada).getId();
-        String nome = clienteTableModel.getCliente(linhaSelecionada).getNome();
-        
-        int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o cliente " + nome + "?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
-      
-        if (confirm == JOptionPane.YES_OPTION) {
-        try {
-            clienteController.excluirCliente(id);
-            limparCampos();
-            JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!");
-        } catch (RegraNegocioException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Negócio", JOptionPane.WARNING_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        clienteController.excluirCliente();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
 
@@ -320,4 +261,68 @@ public class ClientePanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtRg;
     private javax.swing.JTextField txtSobrenome;
     // End of variables declaration//GEN-END:variables
+
+    public void setController(ClienteController controller) {
+        this.clienteController = controller;
+    }
+
+    public void initView() {
+        if (clienteController != null) {
+            clienteController.listarClientes();
+        }
+    }
+
+    public Cliente getClienteFormulario() {
+        String campoId = txtId.getText();
+        int id = (campoId == null || campoId.isBlank()) ? 0 : Integer.parseInt(campoId);
+        return new Cliente(
+            id,
+            txtNome.getText(),
+            txtSobrenome.getText(),
+            txtRg.getText(),
+            txtCpf.getText(),      // com máscara; o controller removerá pontuação
+            txtEndereco.getText()
+        );
+    }
+
+    public Integer getClienteIdParaExcluir() {
+        int linha = tblClientes.getSelectedRow();
+        if (linha >= 0) {
+            Cliente c = clienteTableModel.getCliente(linha);
+            return (c != null) ? c.getId() : null;
+        }
+        String campoId = txtId.getText();
+        if (campoId != null && !campoId.isBlank()) {
+            try { return Integer.valueOf(campoId); } catch (NumberFormatException ignored) {}
+        }
+        return null;
+    }
+
+    public void mostrarClientes(List<Cliente> clientes) {
+        this.clienteTableModel.setClientes(clientes);
+        tblClientes.setModel(this.clienteTableModel);
+        tblClientes.revalidate();
+        tblClientes.repaint();
+    }
+
+    public void limparFormulario() {
+        txtId.setText("");
+        txtNome.setText("");
+        txtSobrenome.setText("");
+        txtRg.setText("");
+        txtCpf.setText("");
+        txtEndereco.setText("");
+        tblClientes.clearSelection();
+        btnSalvar.setEnabled(true);
+        btnExcluir.setEnabled(false);
+    }
+
+    public void apresentaInfo(String msg) {
+         JOptionPane.showMessageDialog(this, msg, "Informação", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void apresentaErro(String msg) {
+        JOptionPane.showMessageDialog(this, msg, "Erro", JOptionPane.ERROR_MESSAGE);
+
+    }
 }

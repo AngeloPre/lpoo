@@ -5,16 +5,13 @@
 package view;
 
 import service.VeiculoService;
-import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
-import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
 import controller.LocacaoController;
-import java.awt.HeadlessException;
 import model.Veiculo;
 import table.ClienteTableModel;
 import table.VeiculoTableModel;
@@ -26,40 +23,30 @@ import java.util.Calendar;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import static service.VeiculoService.*;
-import util.RegraNegocioException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import model.Cliente;
 
 /**
  *
  * @author tads
  */
-public class LocacaoPanel extends javax.swing.JPanel {
+public class LocacaoPanelView extends javax.swing.JPanel {
 
-    private LocacaoController locacaoController;
-    private ClienteTableModel clienteTableModel;
-    private VeiculoTableModel veiculoTableModel;
+    private LocacaoController controller;
+    private ClienteTableModel clienteTableModel = new ClienteTableModel();
+    private VeiculoTableModel veiculoTableModel = new VeiculoTableModel();
     private TableRowSorter<ClienteTableModel> clienteSorter;
     private TableRowSorter<VeiculoTableModel> veiculoSorter;
 
-    public LocacaoPanel() {
-        initComponents();
-    }
-
-    public LocacaoPanel(LocacaoController locacaoController, ClienteTableModel clienteTableModel, VeiculoTableModel veiculoTableModel) {
-        this.locacaoController = locacaoController;
-        this.clienteTableModel = clienteTableModel;
-        this.veiculoTableModel = veiculoTableModel;
-        this.locacaoController.listarClientes();
-        this.locacaoController.listarVeiculos();
+    public LocacaoPanelView() {
         initComponents();
         configurarSorterCliente();
         configurarSorterVeiculos();
         configurarRadioButtons();
         popularCombos();
         limparCampos();
-        this.tblCliente.setModel(clienteTableModel);
-        this.tblVeiculo.setModel(veiculoTableModel);
         btnBuscarCliente.addActionListener(this::botaoBuscarActionPerformed);
 
         tblCliente.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -89,20 +76,18 @@ public class LocacaoPanel extends javax.swing.JPanel {
             }
         });
     }
+    
+    public void setController( LocacaoController controller) {
+        this.controller = controller;
+    }
 
     private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {
         switch (getCriterioSelecionado()) {
-            case "CPF":
-                buscarPorCpf();
-                break;
-            case "NOME":
-                buscarPorNome();
-                break;
-            case "SOBRENOME":
-                buscarPorSobrenome();
-                break;
-            default:
-                break;
+            case "CPF" -> controller.buscarPorCpf();
+            case "NOME" -> controller.buscarPorNome();
+            case "SOBRENOME" -> controller.buscarPorSobrenome();
+            default -> {
+            }
         }
     }
 
@@ -121,48 +106,6 @@ public class LocacaoPanel extends javax.swing.JPanel {
                 preencherCamposVeiculoSelecionado();
             }
         });
-    }
-
-    private void aplicarFiltroCliente(int coluna, String texto) {
-        if (texto == null || texto.isBlank()) {
-            clienteSorter.setRowFilter(null);
-            return;
-        }
-
-        // escapando caracteres especiais para evitar regex inválido
-        String regex = Pattern.quote(texto.trim());
-        clienteSorter.setRowFilter(RowFilter.regexFilter("(?i)" + regex, coluna));
-    }
-
-    private void filtrarPorCpf(String cpf) {
-        aplicarFiltroCliente(4, cpf);
-    }
-
-    private void filtrarPorNome(String nome) {
-        aplicarFiltroCliente(1, nome);
-    }
-
-    private void filtrarPorSobrenome(String sobrenome) {
-        aplicarFiltroCliente(2, sobrenome);
-    }
-
-    private void buscarPorCpf() {
-        filtrarPorCpf(campoBuscaCliente.getText());
-        limparCamposFiltro();
-    }
-
-    private void buscarPorNome() {
-        filtrarPorNome(campoBuscaCliente.getText());
-        limparCamposFiltro();
-    }
-
-    private void buscarPorSobrenome() {
-        filtrarPorSobrenome(campoBuscaCliente.getText());
-        limparCamposFiltro();
-    }
-
-    private void limparCamposFiltro() {
-        campoBuscaCliente.setText("");
     }
 
     private void preencherCamposClienteSelecionado() {
@@ -568,82 +511,23 @@ public class LocacaoPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public void pesquisar() {
-        locacaoController.listarVeiculos();
+    private void pesquisar() {
+        this.controller.listarVeiculos();
         VeiculoService.aplicarFiltrosVeiculo(veiculoSorter, checkboxFiltroTipo, checkboxFiltroMarca, checkboxFiltroCategoria, comboCategoria, comboMarca, comboTipo);
+    }
+    
+    public void pesquisarVeiculosEPessoasPublic () {
+        pesquisar();
+        controller.buscarPorCpf();
     }
 
     private void botaoPesquisarveiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarveiculosActionPerformed
-        locacaoController.listarVeiculos();
+        controller.listarVeiculos();
         VeiculoService.aplicarFiltrosVeiculo(veiculoSorter, checkboxFiltroTipo, checkboxFiltroMarca, checkboxFiltroCategoria, comboCategoria, comboMarca, comboTipo);
     }//GEN-LAST:event_botaoPesquisarveiculosActionPerformed
 
     private void botaoLocarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLocarActionPerformed
-        // validando se um cliente foi selecionado
-        if (campoID.getText().isBlank()) {
-            JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        // validando se um veículo foi selecionado na tabela
-        int selectedRow = tblVeiculo.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, selecione um veículo para locar.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        //validando o número de dias
-        int dias;
-        try {
-            dias = Integer.parseInt(campoDiasDeAluguel.getText());
-            if (dias <= 0) {
-                JOptionPane.showMessageDialog(this, "O número de dias deve ser maior que zero.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Por favor, insira um número válido de dias.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        //validar e converter a data
-        Calendar dataLocacao = Calendar.getInstance();
-        String dataTexto = campoDataLocacao.getText();
-
-        if (dataTexto != null && !dataTexto.trim().isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                sdf.setLenient(false); // serve para impedir datas inválidas como 32/01/2025
-                Date date = sdf.parse(dataTexto);
-                dataLocacao.setTime(date);
-            } catch (ParseException e) {
-                JOptionPane.showMessageDialog(this, "Data Inválida.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "O campo de data é obrigatório.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        try {
-            // tentando obter dados para a locação
-            int modelRow = tblVeiculo.convertRowIndexToModel(selectedRow);
-            Veiculo veiculoSelecionado = veiculoTableModel.getVeiculo(modelRow);
-            String cpfCliente = campoCPF.getText(); // O CPF já está no campo de texto
-
-            // chamando o controller para efetuar a locação
-            locacaoController.locar(veiculoSelecionado.getPlaca(), cpfCliente, dias, dataLocacao);
-
-            JOptionPane.showMessageDialog(this, "Veículo locado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-
-            //atualizando a lista de veículos e limpando os campos
-            locacaoController.listarVeiculos(); // atualiza a tabela de veículos
-            VeiculoService.aplicarFiltrosVeiculo(veiculoSorter, checkboxFiltroTipo, checkboxFiltroMarca, checkboxFiltroCategoria, comboCategoria, comboMarca, comboTipo); // reaplica os filtros para remover o veículo locado da lista
-            limparCampos();
-
-        } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao locar veículo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        } catch (RegraNegocioException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao locar veículo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
+        controller.locar();
     }//GEN-LAST:event_botaoLocarActionPerformed
 
     private void checkboxFiltroMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxFiltroMarcaActionPerformed
@@ -685,4 +569,89 @@ public class LocacaoPanel extends javax.swing.JPanel {
     private javax.swing.JTable tblVeiculo;
     private javax.swing.JTextField valorDiariaVeiculoSelecionado;
     // End of variables declaration//GEN-END:variables
+
+    public String getPlacaSelecionada() {
+        int viewRow = tblVeiculo.getSelectedRow();
+        if (viewRow == -1) return null;
+        int modelRow = tblVeiculo.convertRowIndexToModel(viewRow);
+        Veiculo v = veiculoTableModel.getVeiculo(modelRow);
+        return (v != null) ? v.getPlaca() : null;
+    }
+
+    public String getCpfSelecionado() {
+        String cpf = campoCPF.getText();
+        return (cpf == null) ? null : cpf.trim();
+    }
+
+    public Integer getDiasSelecionados() {
+        String txt = campoDiasDeAluguel.getText();
+        if (txt == null) return null;
+        txt = txt.trim();
+        if (txt.isEmpty()) return null;
+        try {
+            return Integer.valueOf(txt);
+        } catch (NumberFormatException e) {
+            return null; 
+        }
+    }
+
+    public Calendar getDataLocacaoSelecionada() {
+        String dataTexto = campoDataLocacao.getText();
+        if (dataTexto == null || dataTexto.trim().isEmpty()) return null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            Date date = sdf.parse(dataTexto.trim());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            return cal;
+        } catch (ParseException e) {
+            return null; // o controller valida e dá o feedback
+        }
+    }
+
+    public String getFiltroCpf() {
+        String s = campoBuscaCliente.getText();
+        return (s == null) ? null : s.trim();
+    }
+
+    public String getFiltroNome() {
+        String s = campoBuscaCliente.getText();
+        return (s == null) ? null : s.trim();
+    }
+
+    public String getFiltroSobrenome() {
+        String s = campoBuscaCliente.getText();
+        return (s == null) ? null : s.trim();
+    }
+
+    public void mostrarClientes(List<Cliente> clientes) {
+        this.clienteTableModel.setClientes(clientes);
+        tblCliente.setModel(this.clienteTableModel);
+        // Se precisar, reposiciona sorter (ele já usa o mesmo model instance)
+        tblCliente.revalidate();
+        tblCliente.repaint();
+    }
+
+    public void mostrarVeiculos(List<Veiculo> veiculos) {
+        this.veiculoTableModel.setVeiculos(veiculos);
+        tblVeiculo.setModel(this.veiculoTableModel);
+        tblVeiculo.revalidate();
+        tblVeiculo.repaint();
+    }
+
+    public void limparFormulario() {
+        limparCampos(); // reaproveita seu método existente
+        // se quiser, também limpa seleção das tabelas:
+        tblCliente.clearSelection();
+        tblVeiculo.clearSelection();
+    }
+
+    public void apresentaInfo(String info) {
+        JOptionPane.showMessageDialog(null,info + "\n", "Informação", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void apresentaErro(String erro) {
+        JOptionPane.showMessageDialog(this, erro + "\n", "Erro", JOptionPane.ERROR_MESSAGE);
+    }
 }

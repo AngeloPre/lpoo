@@ -120,6 +120,7 @@ public class ClienteDaoSql implements ClienteDao {
 
     @Override
     public Optional<Cliente> getByCpf(String cpf) {
+//        System.out.println("CPF NO DAO:" + cpf);
         String sql = "SELECT * FROM cliente WHERE cpf = ?";
         
         try (Connection conn = ConnectionFactory.getConnection();

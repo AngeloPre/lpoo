@@ -6,7 +6,6 @@ import java.util.Calendar;
 import model.enums.Categoria;
 import model.enums.Estado;
 import model.enums.Marca;
-import util.RegraNegocioException;
 
 public abstract class Veiculo implements VeiculoI {
 
@@ -19,14 +18,13 @@ public abstract class Veiculo implements VeiculoI {
     private String placa;
     private int ano;
 
-    public Veiculo(Marca marca, 
-                    Estado estado, 
-                    Locacao locacao, 
-                    Categoria categoria, 
-                    double valorDeCompra, 
-                    String placa,
-                    int ano) 
-    {
+    public Veiculo(Marca marca,
+            Estado estado,
+            Locacao locacao,
+            Categoria categoria,
+            double valorDeCompra,
+            String placa,
+            int ano) {
         this.placa = placa;
         this.marca = marca;
         this.estado = estado;
@@ -35,7 +33,7 @@ public abstract class Veiculo implements VeiculoI {
         this.valorDeCompra = valorDeCompra;
         this.ano = ano;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -87,22 +85,37 @@ public abstract class Veiculo implements VeiculoI {
     }
 
     @Override
-        public void locar(int dias, Calendar data, Cliente cliente) {
+    public void locar(int dias, Calendar data, Cliente cliente) {
 
-            double valorTotal = dias * getValorDiariaLocacao();
+        double valorTotal = dias * getValorDiariaLocacao();
 
-            this.locacao = new Locacao(dias, valorTotal, data, cliente);
-            this.estado  = Estado.LOCADO;
-        }
-
+        this.locacao = new Locacao(dias, valorTotal, data, cliente);
+        this.estado = Estado.LOCADO;
+    }
 
     @Override
     public void vender() {
         estado = Estado.VENDIDO;
     }
-    
+
     public double getValorDeCompra() {
         return this.valorDeCompra;
     }
-    
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s{id=%d, marca=%s, categoria=%s, placa='%s', ano=%d, estado=%s, valorCompra=%.2f, valorVenda=%.2f}",
+                getClass().getSimpleName(),
+                id,
+                marca != null ? marca.name() : "N/A",
+                categoria != null ? categoria.name() : "N/A",
+                placa != null ? placa : "N/A",
+                ano,
+                estado != null ? estado.name() : "N/A",
+                valorDeCompra,
+                getValorParaVenda()
+        );
+    }
+
 }

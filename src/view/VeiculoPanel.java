@@ -4,7 +4,8 @@
  */
 package view;
 
-import controller.VeiculoPanelController;
+import controller.VeiculoController;
+import java.util.Calendar;
 import javax.swing.JOptionPane;
 import model.Veiculo;
 import model.Automovel;
@@ -16,19 +17,21 @@ import model.enums.Categoria;
 import model.enums.ModeloAutomovel;
 import model.enums.ModeloMotocicleta;
 import model.enums.ModeloVan;
+import util.RegraNegocioException;
+
 /**
  *
  * @author mrblue
  */
 public class VeiculoPanel extends javax.swing.JPanel {
 
-    private VeiculoPanelController controller;
-    
+    private VeiculoController controller;
+
     public VeiculoPanel() {
         initComponents();
     }
-    
-    public void setController(VeiculoPanelController controller) {
+
+    public void setController(VeiculoController controller) {
         this.controller = controller;
     }
 
@@ -36,12 +39,37 @@ public class VeiculoPanel extends javax.swing.JPanel {
         Marca marca = (Marca) MarcaVeiculo.getSelectedItem();
         Estado estado = (Estado) EstadoVeiculo.getSelectedItem();
         Categoria categoria = (Categoria) CategoriaVeiculo.getSelectedItem();
-        double valor = ((Number) valorVeiculo.getValue()).doubleValue();
         String placa = (String) placaVeiculo.getValue();
+        if (placa.isBlank()) {
+            throw new RegraNegocioException("O campo Placa é obrigatório.");
+        }
         String tipoSelecionado = (String) TipoVeiculo.getSelectedItem();
-        int ano = ((Number) anoVeiculo.getValue()).intValue();
         Object modelo = modeloVeiculo.getSelectedItem();
+        double valor;
+        try {
+            String textoValor = valorVeiculo.getText().trim().replace(".", "").replace(",", ".");
+//            System.out.println(textoValor);
+            if (textoValor.isEmpty()) {
+                throw new RegraNegocioException("O campo Valor é obrigatório.");
+            }
+            valor = Double.parseDouble(textoValor);
+            if (valor <= 0) {
+                throw new RegraNegocioException("O valor deve ser maior que zero.");
+            }
+        } catch (NumberFormatException e) {
+            throw new RegraNegocioException("Informe um valor numérico válido.");
+        }
 
+        int ano;
+        try {
+            ano = ((Number) anoVeiculo.getValue()).intValue();
+            int anoAtual = Calendar.getInstance().get(Calendar.YEAR);
+            if (ano < 1900 || ano > anoAtual + 1) {
+                throw new RegraNegocioException("Ano inválido. Deve estar entre 1900 e " + (anoAtual + 1) + ".");
+            }
+        } catch (Exception e) {
+            throw new RegraNegocioException("Informe um ano válido.");
+        }
         if (ano < 1920 || ano > 2025) {
             throw new IllegalArgumentException("Ano Inválido");
         }
@@ -63,7 +91,6 @@ public class VeiculoPanel extends javax.swing.JPanel {
         return veiculo;
     }
 
-    // Error and info display methods
     public void apresentaErro(String erro) {
         JOptionPane.showMessageDialog(null, erro + "\n", "Erro", JOptionPane.ERROR_MESSAGE);
     }
@@ -71,7 +98,7 @@ public class VeiculoPanel extends javax.swing.JPanel {
     public void apresentaInfo(String info) {
         JOptionPane.showMessageDialog(null, info + "\n", "Informação", JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -297,12 +324,13 @@ public class VeiculoPanel extends javax.swing.JPanel {
     private void TipoVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoVeiculoActionPerformed
         String tipoSelecionado = (String) TipoVeiculo.getSelectedItem();
 
-        if (tipoSelecionado.equals("Automóvel"))
-        modeloVeiculo.setModel(new javax.swing.DefaultComboBoxModel<>(model.enums.ModeloAutomovel.values()));
-        else if (tipoSelecionado.equals("Motocicleta"))
-        modeloVeiculo.setModel(new javax.swing.DefaultComboBoxModel<>(model.enums.ModeloMotocicleta.values()));
-        else
-        modeloVeiculo.setModel(new javax.swing.DefaultComboBoxModel<>(model.enums.ModeloVan.values()));
+        if (tipoSelecionado.equals("Automóvel")) {
+            modeloVeiculo.setModel(new javax.swing.DefaultComboBoxModel<>(model.enums.ModeloAutomovel.values()));
+        } else if (tipoSelecionado.equals("Motocicleta")) {
+            modeloVeiculo.setModel(new javax.swing.DefaultComboBoxModel<>(model.enums.ModeloMotocicleta.values()));
+        } else {
+            modeloVeiculo.setModel(new javax.swing.DefaultComboBoxModel<>(model.enums.ModeloVan.values()));
+        }
 
     }//GEN-LAST:event_TipoVeiculoActionPerformed
 

@@ -1,51 +1,63 @@
 package controller;
 
-import banco.VeiculoDaoSql;
-import java.util.ArrayList;
+import banco.VeiculoDao;
 import java.util.List;
 import java.util.stream.Collectors;
 import model.Veiculo;
 import model.enums.Estado;
-import table.VendaVeiculoTableModel;
+import view.VendaPanel;
 
 public class VendaVeiculoController {
-    private final VeiculoDaoSql veiculoDAO = new VeiculoDaoSql();
-    private final VendaVeiculoTableModel vendaVeiculoTableModel;
 
-    public VendaVeiculoController(VendaVeiculoTableModel tableModel) {
-        this.vendaVeiculoTableModel = tableModel;
+    private final VendaPanel view;
+    private final VeiculoDao veiculoDAO;
+
+    public VendaVeiculoController(VendaPanel view, VeiculoDao veiculoDAO) {
+        this.view = view;
+        this.veiculoDAO = veiculoDAO;
+        initController();
     }
-    
-    public List<Veiculo> listarVeiculosParaVenda() {
+
+    private void initController() {
+        view.setController(this);
+        listarVeiculosParaVenda();
+    }
+
+    public void listarVeiculosParaVenda() {
         try {
-            return veiculoDAO.getAll().stream()
+            List<Veiculo> disponiveis = veiculoDAO.getAll().stream()
                 .filter(v -> v.getEstado() == Estado.DISPONIVEL)
                 .collect(Collectors.toList());
-        } catch (Exception e) {return new ArrayList<>();}
-    }
-
-    public void venderVeiculo(Veiculo veiculo) { 
-    if (veiculo != null && veiculo.getEstado() == Estado.DISPONIVEL) {
-        veiculo.vender();
-       try {
-           veiculoDAO.update(veiculo);
-       } catch (Exception e) {
-       }
-    } else {
-        throw new IllegalStateException("Veículo nulo ou não está disponível para venda.");
-    }
-}
-
-    public void atualizarTabela() {
-        try {
-            List<Veiculo> veiculosParaVenda = veiculoDAO.getAll().stream()
-                .filter(v -> v.getEstado() == model.enums.Estado.DISPONIVEL)
-                .collect(java.util.stream.Collectors.toList());
-        
-            // atualiza a lista de veículos no TableModel
-            vendaVeiculoTableModel.setVeiculos(veiculosParaVenda);
+            view.mostrarVeiculos(disponiveis);
+            view.aplicarFiltrosUI();
         } catch (Exception e) {
+            view.apresentaErro("Erro ao listar veículos para venda.");
+            e.printStackTrace();
         }
     }
 
+    public void venderVeiculo() {
+        try {
+            Veiculo veiculo = view.getVeiculoSelecionado();
+            if (veiculo == null) {
+                view.apresentaInfo("Selecione um veículo para vender.");
+                return;
+            }
+            if (veiculo.getEstado() != Estado.DISPONIVEL) {
+                view.apresentaErro("Veículo não está disponível para venda.");
+                return;
+            }
+
+            veiculo.vender();
+            veiculoDAO.update(veiculo);
+
+            view.apresentaInfo("Veículo vendido com sucesso!");
+            listarVeiculosParaVenda();
+            view.limparSelecao();
+
+        } catch (Exception e) {
+            view.apresentaErro("Erro ao vender veículo.");
+            e.printStackTrace();
+        }
+    }
 }

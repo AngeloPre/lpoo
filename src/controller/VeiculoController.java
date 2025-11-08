@@ -1,37 +1,37 @@
 package controller;
 
+import banco.VeiculoDao;
 import banco.VeiculoDaoSql;
-import java.util.List;
 import model.Veiculo;
-import model.enums.Estado;
-import table.VeiculoTableModel;
+import view.VeiculoPanel;
 
 public class VeiculoController {
+    private VeiculoPanel view;
+    private VeiculoDao dao;
 
-    private final VeiculoDaoSql dao = new VeiculoDaoSql();
-    private final VeiculoTableModel veiculoTableDataModel;
-
-    public VeiculoController(VeiculoTableModel veiculoTableDataModel) {
-        this.veiculoTableDataModel = veiculoTableDataModel;
-    }
-
-    public void listarVeiculos() {
-        try {
-            List<Veiculo> veiculos = dao.getAll();
-            veiculoTableDataModel.setVeiculos(veiculos);
-        } catch (Exception e) {}
-    }
-
-    public void incluirVeiculo(Veiculo veiculo) {
-        try {
-            dao.add(veiculo);
-        } catch (Exception e) {}
-        listarVeiculos();
+    public VeiculoController(VeiculoDaoSql veiculoDaoSql) {
     }
     
-    public Estado[] estadosVeiculoNovo(){
-        Estado[] novo = {Estado.DISPONIVEL, Estado.NOVO};
-        return novo;
+    public VeiculoController(VeiculoPanel view, VeiculoDao dao) {
+        this.view = view;
+        this.dao = dao;
+        initController();
     }
+    
+    private void initController() {
+        this.view.setController(this);
+        //this.view.initView();
+    }
+    
+    public void salvarVeiculo() {
+        try {
+            Veiculo veiculo = view.getVeiculoFormulario();
+            dao.add(veiculo);
+            view.apresentaInfo("Veiculo Salvo!");
 
+
+        } catch (Exception ex) {
+            view.apresentaErro("Erro ao salvar veículo: " + ex.getMessage());
+        }
+    }
 }

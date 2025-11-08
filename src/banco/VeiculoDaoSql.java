@@ -185,6 +185,7 @@ public class VeiculoDaoSql implements VeiculoDao {
         return veiculos;
     }
 
+    @Override
     public boolean existsByCliente(Cliente cliente) {
         String sql = "SELECT COUNT(*) FROM veiculo v " +
                      "INNER JOIN locacao l ON v.locacao_id = l.id " +
@@ -228,7 +229,7 @@ public class VeiculoDaoSql implements VeiculoDao {
     private Veiculo mapearVeiculo(ResultSet rs) throws Exception {
         int id = rs.getInt("id");
         String tipo = rs.getString("tipo_veiculo");
-        Marca marca = Marca.valueOf(rs.getString("marca"));
+        Marca marca = Marca.fromDb(rs.getString("marca"));
         Estado estado = Estado.valueOf(rs.getString("estado"));
         Categoria categoria = Categoria.valueOf(rs.getString("categoria"));
         double valorCompra = rs.getDouble("valor_de_compra");
