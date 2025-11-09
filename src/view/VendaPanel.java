@@ -5,6 +5,7 @@
 package view;
 
 import controller.VendaVeiculoController;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableRowSorter;
 import model.Veiculo;
@@ -19,54 +20,37 @@ import table.VendaVeiculoTableModel;
  */
 public class VendaPanel extends javax.swing.JPanel {
 
-    private VendaVeiculoController vendaVeiculoController = null;
-    private VeiculoTableModel vendaVeiculoTableModel = new VendaVeiculoTableModel(); 
+    private VendaVeiculoController controller;
+    private VeiculoTableModel vendaVeiculoTableModel = new VendaVeiculoTableModel();
     private TableRowSorter<VeiculoTableModel> veiculoSorter;
 
     public VendaPanel() {
         initComponents();
-    }
-    
-    
-
-    /**
-     * Creates new form VendaPanel
-     */
-    public VendaPanel(VendaVeiculoController controller, VendaVeiculoTableModel tableModel) {
-        this.vendaVeiculoController = controller;
-        this.vendaVeiculoTableModel = tableModel;
-
-        // Constrói os componentes visuais (botões, tabelas, etc.)
-        initComponents();
         configurarSorterVeiculos();
         popularCombos();
-        
-        // Vincula o modelo de dados correto (vendaVeiculoTableModel) à JTable
-        tableVeiculosVenda.setModel(this.vendaVeiculoTableModel);
-        
-        // Carrega os dados iniciais na tabela
-        this.vendaVeiculoController.atualizarTabela();
     }
-    
+
     /**
      * Retorna o veículo selecionado na tabela.
+     *
      * @return O objeto Veiculo selecionado, ou null se nenhum for selecionado.
      */
-    private Veiculo getVeiculoSelecionado() {
-        int selectedRow = tableVeiculosVenda.getSelectedRow();
-        if (selectedRow != -1) {
-            // Converte o índice da linha da visão para o índice do modelo (importante para tabelas ordenadas)
-            int modelRow = tableVeiculosVenda.convertRowIndexToModel(selectedRow);
-            return this.vendaVeiculoTableModel.getVeiculo(modelRow);
+    public Veiculo getVeiculoSelecionado() {
+        int viewRow = tableVeiculosVenda.getSelectedRow();
+        if (viewRow == -1) {
+            return null;
         }
-        return null;
+        int modelRow = tableVeiculosVenda.convertRowIndexToModel(viewRow);
+        return vendaVeiculoTableModel.getVeiculo(modelRow);
     }
-        private void configurarSorterVeiculos() {
+
+    private void configurarSorterVeiculos() {
         veiculoSorter = new TableRowSorter<>(vendaVeiculoTableModel);
         tableVeiculosVenda.setRowSorter(veiculoSorter);
-
+        tableVeiculosVenda.setModel(vendaVeiculoTableModel);
     }
-        private void popularCombos() {
+
+    private void popularCombos() {
         /* tipo (automóvel / moto / van)  */
         comboTipo.setModel(
                 new javax.swing.DefaultComboBoxModel<>(
@@ -206,35 +190,16 @@ public class VendaPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderVeiculoActionPerformed
-        // TODO add your handling code here:
-        Veiculo veiculo = getVeiculoSelecionado();
-
-        if (veiculo == null) {
-            JOptionPane.showMessageDialog(this, "Por favor, selecione um veículo para vender.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String msg = String.format("Deseja vender o veículo %s por R$%,.2f?",
-                veiculo.getPlaca(), veiculo.getValorParaVenda());
-
-        int confirm = JOptionPane.showConfirmDialog(this, msg, "Confirmar Venda", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                vendaVeiculoController.venderVeiculo(veiculo);
-                JOptionPane.showMessageDialog(this, "Veículo vendido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-                vendaVeiculoController.atualizarTabela(); // Atualiza a tabela
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Erro ao vender veículo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        controller.venderVeiculo();
     }//GEN-LAST:event_btnVenderVeiculoActionPerformed
 
     private void botaoPesquisarveiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarveiculosActionPerformed
-        vendaVeiculoController.listarVeiculosParaVenda();
-        VeiculoService.aplicarFiltrosVeiculo(veiculoSorter, checkboxFiltroTipo, checkboxFiltroMarca, checkboxFiltroCategoria, comboCategoria, comboMarca, comboTipo);
+        controller.listarVeiculosParaVenda();
     }//GEN-LAST:event_botaoPesquisarveiculosActionPerformed
 
+    public void pesquisarVeiculosPublic() {
+        controller.listarVeiculosParaVenda();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoPesquisarveiculos;
@@ -249,4 +214,40 @@ public class VendaPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableVeiculosVenda;
     // End of variables declaration//GEN-END:variables
+
+    public void setController(VendaVeiculoController controller) {
+        this.controller = controller;
+
+    }
+
+    public void mostrarVeiculos(List<Veiculo> veiculos) {
+        vendaVeiculoTableModel.setVeiculos(veiculos);
+        tableVeiculosVenda.setModel(vendaVeiculoTableModel);
+        tableVeiculosVenda.revalidate();
+        tableVeiculosVenda.repaint();
+    }
+
+    public void aplicarFiltrosUI() {
+        VeiculoService.aplicarFiltrosVeiculo(
+                veiculoSorter,
+                checkboxFiltroTipo,
+                checkboxFiltroMarca,
+                checkboxFiltroCategoria,
+                comboCategoria,
+                comboMarca,
+                comboTipo
+        );
+    }
+
+    public void limparSelecao() {
+        tableVeiculosVenda.clearSelection();
+    }
+
+    public void apresentaInfo(String msg) {
+        JOptionPane.showMessageDialog(this, msg, "Informação", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void apresentaErro(String msg) {
+        JOptionPane.showMessageDialog(this, msg, "Erro", JOptionPane.ERROR_MESSAGE);
+    }
 }

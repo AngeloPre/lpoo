@@ -1,65 +1,48 @@
 package main;
 
+import banco.ClienteDao;
+import banco.ClienteDaoSql;
+import banco.DatabaseInitializer;
+import banco.LocacaoDao;
+import banco.LocacaoDaoSql;
+import banco.VeiculoDao;
 import banco.VeiculoDaoSql;
 import controller.ClienteController;
 import controller.DevolucaoController;
 import controller.LocacaoController;
 import controller.VeiculoController;
-import controller.VeiculoPanelController;
 import controller.VendaVeiculoController;
 import javax.swing.SwingUtilities;
-import table.ClienteTableModel;
-import table.DevolucaoTableModel;
-import table.VeiculoTableModel;
-import table.VendaVeiculoTableModel;
 import view.TelaPrincipal;
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                // Instanciação e conexão dos componentes para a tela de Clientes
-                
-                //Table Model
-                ClienteTableModel clienteTableModel = new ClienteTableModel();
-                VeiculoTableModel veiculoTableModel = new VeiculoTableModel();
-                DevolucaoTableModel devolucaoTableModel = new DevolucaoTableModel();
-                VendaVeiculoTableModel vendaVeiculoTableModel = new VendaVeiculoTableModel();              
-                //Controllers
-                ClienteController clienteController = new ClienteController(clienteTableModel);
-                LocacaoController locacaoController = new LocacaoController(clienteTableModel, veiculoTableModel);
-                VeiculoController veiculoController = new VeiculoController(veiculoTableModel);
-                DevolucaoController devolucaoController = new DevolucaoController();
-                
-                VendaVeiculoController vendaVeiculoController = new VendaVeiculoController(vendaVeiculoTableModel);
-                
+                try {
+                    DatabaseInitializer.initialize();
+                } catch (Exception ex) {
+                    System.out.println("Erro nos scripts de inicialização do banco");
+                    ex.printStackTrace();
+                }
+
                 //Daos
-                VeiculoDaoSql veiculoDaoSql = new VeiculoDaoSql();
-                
-                TelaPrincipal tp = new TelaPrincipal(
-                        clienteController, 
-                        clienteTableModel,
-                        locacaoController,
-                        veiculoTableModel,
-                        veiculoController,
-                        devolucaoController,
-                        devolucaoTableModel,
-                        vendaVeiculoController,
-                        vendaVeiculoTableModel);
+                VeiculoDao veiculoDAO = new VeiculoDaoSql();
+                ClienteDao clienteDAO = new ClienteDaoSql();
+                LocacaoDao locacaoDAO = new LocacaoDaoSql();
+
+                //View principal
+                TelaPrincipal tp = new TelaPrincipal();
                 tp.setVisible(true);
-                
-                                //Controllers Novos
-                VeiculoPanelController veiculoPanelController = new VeiculoPanelController(tp.getVeiculoPanel() ,veiculoDaoSql);
 
-                // Inicializa a tabela de clientes
-                
+                //Controllers Novos
+                new VeiculoController(tp.getVeiculoPanel(), veiculoDAO);
+                new LocacaoController(tp.getLocacaoPanel(), veiculoDAO, clienteDAO, locacaoDAO);
+                new ClienteController(tp.getClientePanel(), clienteDAO, veiculoDAO);
+                new VendaVeiculoController(tp.getVendaPanel(), veiculoDAO);
+                new DevolucaoController(tp.getDevolucaoPanel(), veiculoDAO, locacaoDAO);
 
-                // Para outras telas, você faria algo similar:
-                // VeiculoController veiculoController = new VeiculoController();
-                // VeiculoCadastroView veiculoCadastroView = new VeiculoCadastroView(veiculoController);
-                // veiculoCadastroView.setVisible(true);
-
-                // E assim por diante para LocacaoView, DevolucaoView, VendaView
             }
         });
 

@@ -15,7 +15,7 @@ public class ConnectionFactory {
     public static Connection getConnection() throws 
             SQLException, IOException{
         //readProperties();
-        String url = "jdbc:postgresql://localhost:5432/";
+        String url = "jdbc:postgresql://localhost:5432/locadora";
         String user = "postgres";
         String pwd = "postgres";
         return DriverManager.getConnection(

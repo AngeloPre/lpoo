@@ -7,6 +7,7 @@ package view;
 import controller.DevolucaoController;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.TableRowSorter;
 import model.Veiculo;
 import table.DevolucaoTableModel;
 
@@ -15,35 +16,25 @@ import table.DevolucaoTableModel;
  * @author victor
  */
 public class DevolucaoPanel extends javax.swing.JPanel {
-    
-     private DevolucaoController devolucaoController;
-     private DevolucaoTableModel tableModel;
-    /**
-     * Creates new form DevolucaoPanel
-     */
-   
-     
-    
+
+    private DevolucaoController controller;
+    private DevolucaoTableModel tableModel;
+    private TableRowSorter<DevolucaoTableModel> sorter;
+
     public DevolucaoPanel() {
         initComponents();
+        configurarTabela();
     }
 
-    public DevolucaoPanel(DevolucaoController controller, DevolucaoTableModel tableModel) {
-        this.devolucaoController = controller;
-        this.tableModel = tableModel; // Recebe o modelo
-        initComponents();
-        
-        tabelaVeiculos.setModel(this.tableModel); // Define o modelo na tabela
-        
-        carregarDados(); // Carrega os dados iniciais
-
+    private void configurarTabela() {
+        if (tableModel == null) {
+            tableModel = new DevolucaoTableModel();
+        }
+        tabelaVeiculos.setModel(tableModel);
+        sorter = new TableRowSorter<>(tableModel);
+        tabelaVeiculos.setRowSorter(sorter);
     }
 
-    private void carregarDados() {
-        List<Veiculo> locados = devolucaoController.listarVeiculosLocados();
-        //atualizando os dados do modelo existente
-        tableModel.setVeiculosLocados(locados);
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -110,27 +101,11 @@ public class DevolucaoPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDevolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevolverActionPerformed
-        // TODO add your handling code here:
-        int selectedRow = tabelaVeiculos.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um veículo para devolver.");
-            return;
-        }
-        Veiculo veiculo = tableModel.getVeiculo(selectedRow);
-        int confirm = JOptionPane.showConfirmDialog(this, "Deseja realmente devolver o veículo " + veiculo.getPlaca() + "?", "Confirmação", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                devolucaoController.devolverVeiculo(veiculo);
-                JOptionPane.showMessageDialog(this, "Veículo devolvido com sucesso!");
-                carregarDados(); // Atualiza a tabela
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Erro ao devolver: " + e.getMessage());
-            }
-        }
+        controller.devolverVeiculo();
     }//GEN-LAST:event_btnDevolverActionPerformed
 
     public void carregarDadosPublic() {
-        carregarDados();
+        controller.listarVeiculosLocados();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -139,4 +114,36 @@ public class DevolucaoPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabelaVeiculos;
     // End of variables declaration//GEN-END:variables
+
+    public void setController(DevolucaoController controller) {
+        this.controller = controller;
+
+    }
+
+    public Veiculo getVeiculoSelecionado() {
+        int viewRow = tabelaVeiculos.getSelectedRow();
+        if (viewRow == -1) {
+            return null;
+        }
+        int modelRow = tabelaVeiculos.convertRowIndexToModel(viewRow);
+        return tableModel.getVeiculo(modelRow);
+    }
+
+    public void mostrarVeiculosLocados(List<Veiculo> veiculos) {
+        tableModel.setVeiculosLocados(veiculos);
+        tabelaVeiculos.revalidate();
+        tabelaVeiculos.repaint();
+    }
+
+    public void limparSelecao() {
+        tabelaVeiculos.clearSelection();
+    }
+
+    public void apresentaInfo(String msg) {
+        JOptionPane.showMessageDialog(this, msg, "Informação", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void apresentaErro(String msg) {
+        JOptionPane.showMessageDialog(this, msg, "Erro", JOptionPane.ERROR_MESSAGE);
+    }
 }
